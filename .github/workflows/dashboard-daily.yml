@@ -1,24 +1,22 @@
 # Deploys the TerraSlate marketing dashboard to GitHub Pages.
-# - on push to main:      republish whatever data.json is committed (instant deploy)
-# - daily cron:           re-run build + render + deploy (keeps the page fresh)
-# - manual "Run workflow": deploy on demand
+# - daily cron:            pull fresh Meta data -> commit -> build -> render -> deploy
+# - manual "Run workflow": same as the cron (on-demand refresh)
+# - on push to main:       build + render + deploy the committed data.json (no re-pull)
 #
-# NOTE on the daily DATA refresh: pulling fresh Meta numbers in the cloud needs a Meta
-# Graph API token (the MCP connector used locally is not available in GitHub Actions).
-# Until that token is added as a repo secret and wired into a pull step below, the daily
-# cron only re-renders the committed data.json. The reliable refresh path today is: run
-# the local pull (which updates data.json) and push - this workflow then deploys it.
+# The daily DATA pull needs a Meta Graph API token in the repo secret META_ACCESS_TOKEN
+# (Settings > Secrets and variables > Actions). Without it, the pull step is skipped and the
+# cron just redeploys the committed data.json.
 name: dashboard-deploy
 
 on:
-  push:
-    branches: [main]
   schedule:
     - cron: "0 12 * * *"   # 12:00 UTC = 06:00 America/Denver (MDT). Adjust for your timezone.
   workflow_dispatch: {}
+  push:
+    branches: [main]
 
 permissions:
-  contents: read
+  contents: write   # to commit the daily-refreshed data.json
   pages: write
   id-token: write
 
@@ -38,15 +36,32 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Rebuild from the committed data.json (reconcile gate + render guards run here).
+      # Pull fresh Meta data on cron / manual runs only (not on push), and only if a token exists.
+      - name: Pull Meta data
+        if: ${{ github.event_name != 'push' && env.META_ACCESS_TOKEN != '' }}
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_AD_ACCOUNT_ID: "24540744"
+        run: python3 pull/meta.py
+
+      # Reconcile + derive + render (gates run here; a bad pull cannot deploy).
       - name: Build and render
         run: |
           python3 build_dashboard.py
           python3 render.py
 
+      # Persist the refreshed data + page (only meaningful on cron/manual; harmless on push).
+      - name: Commit refreshed data
+        if: ${{ github.event_name != 'push' }}
+        run: |
+          git config user.name "dashboard-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data.json index.html
+          git commit -m "chore: daily refresh $(date -u +%Y-%m-%d) [skip ci]" || echo "no changes"
+          git push || echo "nothing to push"
+
       - name: Assemble site
         run: mkdir -p _site && cp index.html _site/index.html
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
