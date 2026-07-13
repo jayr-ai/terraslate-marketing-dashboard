@@ -1,0 +1,438 @@
+{
+  "meta": {
+    "client": "TerraSlate Paper",
+    "reportingTz": "America/Denver",
+    "currency": "USD",
+    "windowLabel": "Last 30 days",
+    "dateStart": "2026-06-13",
+    "dateEnd": "2026-07-12",
+    "priorLabel": "Prior 30 days",
+    "generatedAt": "2026-07-13",
+    "builtAt": "2026-07-13T22:52:33+08:00"
+  },
+  "channels": {
+    "facebook": {
+      "connected": true,
+      "label": "Facebook / Instagram",
+      "kind": "ads",
+      "attribution": "Meta default (mixed per ad set)",
+      "spend": 18145.3,
+      "impressions": 1600837,
+      "clicks": 13255,
+      "orders": 260,
+      "revenue": 94251.83,
+      "revenueBasis": "derived from purchase ROAS",
+      "roas": 5.19,
+      "ctr": 0.83,
+      "cpc": 1.37,
+      "cvr": 1.96,
+      "aov": 362.51,
+      "spendShare": 100.0,
+      "revenueShare": 100.0
+    },
+    "google": {
+      "connected": false,
+      "label": "Google Ads",
+      "kind": "ads",
+      "attribution": "",
+      "spend": 0,
+      "impressions": 0,
+      "clicks": 0,
+      "orders": 0,
+      "revenue": 0,
+      "roas": null,
+      "ctr": null,
+      "cpc": null,
+      "cvr": null,
+      "aov": null,
+      "spendShare": 0,
+      "revenueShare": 0
+    },
+    "amazon": {
+      "connected": false,
+      "label": "Amazon",
+      "kind": "marketplace",
+      "attribution": "",
+      "spend": 0,
+      "impressions": 0,
+      "clicks": 0,
+      "orders": 0,
+      "revenue": 0,
+      "adRevenue": 0,
+      "totalRevenue": 0,
+      "roas": null,
+      "ctr": null,
+      "cpc": null,
+      "cvr": null,
+      "aov": null,
+      "spendShare": 0,
+      "revenueShare": 0
+    },
+    "walmart": {
+      "connected": false,
+      "label": "Walmart",
+      "kind": "marketplace",
+      "attribution": "",
+      "spend": 0,
+      "impressions": 0,
+      "clicks": 0,
+      "orders": 0,
+      "revenue": 0,
+      "adRevenue": 0,
+      "totalRevenue": 0,
+      "roas": null,
+      "ctr": null,
+      "cpc": null,
+      "cvr": null,
+      "aov": null,
+      "spendShare": 0,
+      "revenueShare": 0
+    }
+  },
+  "daily": [
+    {
+      "date": "2026-06-13",
+      "channel": "facebook",
+      "spend": 622.45,
+      "impressions": 49106,
+      "clicks": 446,
+      "orders": 3,
+      "revenue": 2135.0
+    },
+    {
+      "date": "2026-06-14",
+      "channel": "facebook",
+      "spend": 767.68,
+      "impressions": 68756,
+      "clicks": 568,
+      "orders": 3,
+      "revenue": 483.64
+    },
+    {
+      "date": "2026-06-15",
+      "channel": "facebook",
+      "spend": 927.18,
+      "impressions": 72878,
+      "clicks": 501,
+      "orders": 16,
+      "revenue": 9753.93
+    },
+    {
+      "date": "2026-06-16",
+      "channel": "facebook",
+      "spend": 982.84,
+      "impressions": 74858,
+      "clicks": 478,
+      "orders": 15,
+      "revenue": 4550.55
+    },
+    {
+      "date": "2026-06-17",
+      "channel": "facebook",
+      "spend": 930.48,
+      "impressions": 72303,
+      "clicks": 523,
+      "orders": 10,
+      "revenue": 5080.42
+    },
+    {
+      "date": "2026-06-18",
+      "channel": "facebook",
+      "spend": 888.52,
+      "impressions": 74094,
+      "clicks": 508,
+      "orders": 10,
+      "revenue": 4007.23
+    },
+    {
+      "date": "2026-06-19",
+      "channel": "facebook",
+      "spend": 808.05,
+      "impressions": 62301,
+      "clicks": 482,
+      "orders": 8,
+      "revenue": 3070.59
+    },
+    {
+      "date": "2026-06-20",
+      "channel": "facebook",
+      "spend": 496.65,
+      "impressions": 41643,
+      "clicks": 379,
+      "orders": 4,
+      "revenue": 2229.96
+    },
+    {
+      "date": "2026-06-21",
+      "channel": "facebook",
+      "spend": 619.31,
+      "impressions": 49010,
+      "clicks": 480,
+      "orders": 2,
+      "revenue": 805.1
+    },
+    {
+      "date": "2026-06-22",
+      "channel": "facebook",
+      "spend": 702.54,
+      "impressions": 56901,
+      "clicks": 449,
+      "orders": 9,
+      "revenue": 3871.0
+    },
+    {
+      "date": "2026-06-23",
+      "channel": "facebook",
+      "spend": 686.11,
+      "impressions": 51027,
+      "clicks": 406,
+      "orders": 15,
+      "revenue": 5385.96
+    },
+    {
+      "date": "2026-06-24",
+      "channel": "facebook",
+      "spend": 620.49,
+      "impressions": 46597,
+      "clicks": 364,
+      "orders": 14,
+      "revenue": 3238.96
+    },
+    {
+      "date": "2026-06-25",
+      "channel": "facebook",
+      "spend": 577.89,
+      "impressions": 51506,
+      "clicks": 392,
+      "orders": 13,
+      "revenue": 2143.97
+    },
+    {
+      "date": "2026-06-26",
+      "channel": "facebook",
+      "spend": 498.45,
+      "impressions": 37830,
+      "clicks": 343,
+      "orders": 10,
+      "revenue": 7531.58
+    },
+    {
+      "date": "2026-06-27",
+      "channel": "facebook",
+      "spend": 374.78,
+      "impressions": 32760,
+      "clicks": 333,
+      "orders": 4,
+      "revenue": 1203.04
+    },
+    {
+      "date": "2026-06-28",
+      "channel": "facebook",
+      "spend": 510.86,
+      "impressions": 42119,
+      "clicks": 465,
+      "orders": 2,
+      "revenue": 556.84
+    },
+    {
+      "date": "2026-06-29",
+      "channel": "facebook",
+      "spend": 623.16,
+      "impressions": 52591,
+      "clicks": 416,
+      "orders": 12,
+      "revenue": 3140.73
+    },
+    {
+      "date": "2026-06-30",
+      "channel": "facebook",
+      "spend": 661.97,
+      "impressions": 50991,
+      "clicks": 406,
+      "orders": 15,
+      "revenue": 5328.86
+    },
+    {
+      "date": "2026-07-01",
+      "channel": "facebook",
+      "spend": 593.83,
+      "impressions": 55997,
+      "clicks": 481,
+      "orders": 14,
+      "revenue": 6193.65
+    },
+    {
+      "date": "2026-07-02",
+      "channel": "facebook",
+      "spend": 526.71,
+      "impressions": 52457,
+      "clicks": 389,
+      "orders": 8,
+      "revenue": 1638.07
+    },
+    {
+      "date": "2026-07-03",
+      "channel": "facebook",
+      "spend": 476.35,
+      "impressions": 52697,
+      "clicks": 482,
+      "orders": 9,
+      "revenue": 981.28
+    },
+    {
+      "date": "2026-07-04",
+      "channel": "facebook",
+      "spend": 350.79,
+      "impressions": 35440,
+      "clicks": 397,
+      "orders": 6,
+      "revenue": 743.67
+    },
+    {
+      "date": "2026-07-05",
+      "channel": "facebook",
+      "spend": 524.7,
+      "impressions": 54690,
+      "clicks": 565,
+      "orders": 3,
+      "revenue": 1096.62
+    },
+    {
+      "date": "2026-07-06",
+      "channel": "facebook",
+      "spend": 531.28,
+      "impressions": 55885,
+      "clicks": 471,
+      "orders": 12,
+      "revenue": 3363.0
+    },
+    {
+      "date": "2026-07-07",
+      "channel": "facebook",
+      "spend": 592.92,
+      "impressions": 60264,
+      "clicks": 426,
+      "orders": 14,
+      "revenue": 5271.06
+    },
+    {
+      "date": "2026-07-08",
+      "channel": "facebook",
+      "spend": 500.28,
+      "impressions": 54130,
+      "clicks": 440,
+      "orders": 6,
+      "revenue": 1700.95
+    },
+    {
+      "date": "2026-07-09",
+      "channel": "facebook",
+      "spend": 465.61,
+      "impressions": 48030,
+      "clicks": 410,
+      "orders": 11,
+      "revenue": 3333.77
+    },
+    {
+      "date": "2026-07-10",
+      "channel": "facebook",
+      "spend": 432.35,
+      "impressions": 46813,
+      "clicks": 383,
+      "orders": 8,
+      "revenue": 4362.41
+    },
+    {
+      "date": "2026-07-11",
+      "channel": "facebook",
+      "spend": 352.27,
+      "impressions": 40042,
+      "clicks": 347,
+      "orders": 1,
+      "revenue": 7.5
+    },
+    {
+      "date": "2026-07-12",
+      "channel": "facebook",
+      "spend": 498.8,
+      "impressions": 57121,
+      "clicks": 525,
+      "orders": 3,
+      "revenue": 1042.49
+    }
+  ],
+  "prior": {
+    "spend": 20512.51,
+    "revenue": 160407.83,
+    "orders": 411,
+    "blendedRoas": 7.82
+  },
+  "remediation": {
+    "walmartConnector": false
+  },
+  "insights": [
+    {
+      "severity": "info",
+      "text": "Facebook / Instagram is the strongest channel at 5.19x ROAS on $18,145 spend."
+    },
+    {
+      "severity": "high",
+      "text": "Total revenue is down 41.2% vs the prior period - investigate the driving channel."
+    },
+    {
+      "severity": "warn",
+      "text": "Google Ads is not connected - its tiles read NO DATA and it is excluded from blended totals."
+    },
+    {
+      "severity": "warn",
+      "text": "Amazon is not connected - its tiles read NO DATA and it is excluded from blended totals."
+    },
+    {
+      "severity": "warn",
+      "text": "Walmart is not connected - its tiles read NO DATA and it is excluded from blended totals."
+    }
+  ],
+  "totals": {
+    "spend": 18145.3,
+    "revenue": 94251.83,
+    "orders": 260,
+    "clicks": 13255,
+    "impressions": 1600837,
+    "newCustomers": 0,
+    "aov": 362.51,
+    "blendedRoas": 5.19,
+    "cac": null,
+    "delta": {
+      "spend": -11.5,
+      "revenue": -41.2,
+      "orders": -36.7,
+      "blendedRoas": -33.6
+    }
+  },
+  "provenance": [
+    {
+      "source": "Facebook / Instagram",
+      "connected": true,
+      "attribution": "Meta default (mixed per ad set)",
+      "dateRange": "2026-06-13 to 2026-07-12"
+    },
+    {
+      "source": "Google Ads",
+      "connected": false,
+      "attribution": "",
+      "dateRange": "2026-06-13 to 2026-07-12"
+    },
+    {
+      "source": "Amazon",
+      "connected": false,
+      "attribution": "",
+      "dateRange": "2026-06-13 to 2026-07-12"
+    },
+    {
+      "source": "Walmart",
+      "connected": false,
+      "attribution": "",
+      "dateRange": "2026-06-13 to 2026-07-12"
+    }
+  ]
+}

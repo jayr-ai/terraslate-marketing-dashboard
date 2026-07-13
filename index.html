@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TerraSlate Paper - Marketing Dashboard</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+    --blue:#3b82f6; --navy:#0f172a; --green:#16a34a; --red:#dc2626; --amber:#d97706;
+    --spend:#94a3b8; --rev:#3b82f6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; }
+  }
+  :root[data-theme="dark"]{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; }
+  :root[data-theme="light"]{ --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 64px;}
+  header.top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
+  h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-0.01em;}
+  .win{color:var(--muted);font-size:13px;}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin:28px 0 12px;font-weight:700;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .kpi-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .kpi-value{font-size:24px;font-weight:700;letter-spacing:-0.02em;}
+  .delta{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;}
+  .delta.up{color:var(--green)} .delta.down{color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th:first-child,td:first-child{text-align:left;}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;}
+  tr.off td{color:var(--muted);}
+  .na{color:var(--amber);font-weight:600;}
+  .scroll{overflow-x:auto;}
+  .mix-row{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center;margin:10px 0;}
+  .mix-name{font-size:13px;font-weight:600;}
+  .mix-bar{position:relative;background:var(--line);border-radius:6px;height:20px;margin:4px 0;overflow:hidden;}
+  .mix-bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;}
+  .fill.spend{background:var(--spend)} .fill.rev{background:var(--rev)}
+  .mix-bar span{position:relative;font-size:11px;color:var(--ink);padding-left:8px;line-height:20px;mix-blend-mode:difference;color:#fff;}
+  .mk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+  .mk-card{border:1px solid var(--line);border-radius:10px;padding:14px;}
+  .mk-card h4{margin:0 0 10px;font-size:14px;}
+  .mk-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;}
+  ul.insights{list-style:none;padding:0;margin:0;}
+  .ins{padding:10px 12px;border-left:3px solid var(--muted);margin-bottom:8px;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:8px;}
+  .ins.high{border-left-color:var(--red)} .ins.warn{border-left-color:var(--amber)} .ins.info{border-left-color:var(--blue)}
+  .sev{font-size:10px;font-weight:700;letter-spacing:0.05em;padding:1px 6px;border-radius:4px;background:var(--line);margin-right:8px;}
+  #chart{width:100%;height:260px;}
+  footer{margin-top:32px;color:var(--muted);font-size:12px;}
+  .legend{font-size:12px;color:var(--muted);margin:6px 0 0;}
+  .legend b{color:var(--rev)} .legend i{color:var(--spend);font-style:normal;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>TerraSlate Paper - Marketing Dashboard</h1>
+    <div class="win">Last 30 days: 2026-06-13 to 2026-07-12 - built 2026-07-13T22:52:33+08:00 (America/Denver)</div>
+  </header>
+
+  <h2>Overview</h2>
+  <div class="kpis">
+  <!--KPI_CARDS_START-->
+<div class="kpi"><div class="kpi-label">Total spend</div><div class="kpi-value">$18,145</div><span class="delta down">▼ 11.5%</span></div>
+<div class="kpi"><div class="kpi-label">Total revenue</div><div class="kpi-value">$94,252</div><span class="delta down">▼ 41.2%</span></div>
+<div class="kpi"><div class="kpi-label">Blended ROAS (MER)</div><div class="kpi-value">5.19x</div><span class="delta down">▼ 33.6%</span></div>
+<div class="kpi"><div class="kpi-label">Orders</div><div class="kpi-value">260</div><span class="delta down">▼ 36.7%</span></div>
+<div class="kpi"><div class="kpi-label">AOV</div><div class="kpi-value">$362.51</div></div>
+<!--KPI_CARDS_END-->
+  </div>
+
+  <h2>Spend vs revenue over time</h2>
+  <div class="panel">
+    <svg id="chart" viewBox="0 0 900 260" preserveAspectRatio="none" aria-label="Spend vs revenue trend"></svg>
+    <p class="legend"><b>&#9632; revenue</b> &nbsp; <i>&#9632; spend</i></p>
+  </div>
+
+  <h2>Channel breakdown</h2>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Channel</th><th>Spend</th><th>Revenue</th><th>ROAS</th><th>Orders</th><th>AOV</th><th>CTR</th><th>CPC</th><th>CVR</th></tr></thead>
+      <tbody>
+      <!--CHANNELS_TABLE_START-->
+<tr>
+      <td>Facebook / Instagram</td>
+      <td>$18,145</td>
+      <td>$94,252</td>
+      <td>5.19x</td>
+      <td>260</td>
+      <td>$362.51</td>
+      <td>0.83%</td>
+      <td>$1.37</td>
+      <td>1.96%</td>
+    </tr>
+<tr class="off"><td>Google Ads</td><td colspan="8" class="na">NO DATA (not connected)</td></tr>
+<tr class="off"><td>Amazon</td><td colspan="8" class="na">NO DATA (not connected)</td></tr>
+<tr class="off"><td>Walmart</td><td colspan="8" class="na">NO DATA (not connected)</td></tr>
+<!--CHANNELS_TABLE_END-->
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Channel mix</h2>
+  <div class="panel">
+  <!--CHANNEL_MIX_START-->
+<div class="mix-row">
+       <div class="mix-name">Facebook / Instagram</div>
+       <div class="mix-bars">
+         <div class="mix-bar"><div class="fill spend" style="width:100.0%"></div><span>100.0% spend</span></div>
+         <div class="mix-bar"><div class="fill rev" style="width:100.0%"></div><span>100.0% revenue</span></div>
+       </div>
+     </div>
+<!--CHANNEL_MIX_END-->
+  </div>
+
+  <h2>Marketplace efficiency (ACoS / TACoS)</h2>
+  <div class="mk-grid">
+  <!--MARKETPLACE_START-->
+<div class="mk-card off"><h4>Amazon</h4><p class="na">NO DATA (not connected)</p></div>
+<div class="mk-card off"><h4>Walmart</h4><p class="na">NO DATA (not connected)</p></div>
+<!--MARKETPLACE_END-->
+  </div>
+
+  <h2>Anomalies &amp; insights</h2>
+  <ul class="insights">
+  <!--INSIGHTS_START-->
+<li class="ins high"><span class="sev">HIGH</span> Total revenue is down 41.2% vs the prior period - investigate the driving channel.</li>
+<li class="ins warn"><span class="sev">WARN</span> Google Ads is not connected - its tiles read NO DATA and it is excluded from blended totals.</li>
+<li class="ins warn"><span class="sev">WARN</span> Amazon is not connected - its tiles read NO DATA and it is excluded from blended totals.</li>
+<li class="ins warn"><span class="sev">WARN</span> Walmart is not connected - its tiles read NO DATA and it is excluded from blended totals.</li>
+<li class="ins info"><span class="sev">INFO</span> Facebook / Instagram is the strongest channel at 5.19x ROAS on $18,145 spend.</li>
+<!--INSIGHTS_END-->
+  </ul>
+
+  <h2>Data provenance</h2>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Source</th><th>Status</th><th>Attribution</th><th>Date range</th></tr></thead>
+      <tbody>
+      <!--PROVENANCE_START-->
+<tr><td>Facebook / Instagram</td><td>connected</td><td>Meta default (mixed per ad set)</td><td>2026-06-13 to 2026-07-12</td></tr>
+<tr><td>Google Ads</td><td><span class="na">not connected</span></td><td>n/a</td><td>2026-06-13 to 2026-07-12</td></tr>
+<tr><td>Amazon</td><td><span class="na">not connected</span></td><td>n/a</td><td>2026-06-13 to 2026-07-12</td></tr>
+<tr><td>Walmart</td><td><span class="na">not connected</span></td><td>n/a</td><td>2026-06-13 to 2026-07-12</td></tr>
+<!--PROVENANCE_END-->
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Numbers reconciled to the cent by build_dashboard.py before publish. Marketplace revenue (ACoS world) and
+    total revenue (TACoS world) are reported separately and never summed as company revenue.
+    Channels marked NO DATA are excluded from blended totals.
+  </footer>
+</div>
+
+<!--CHART_DATA_START-->
+<script id="dash-data" type="application/json">{"daily": [{"date": "2026-06-13", "channel": "facebook", "spend": 622.45, "impressions": 49106, "clicks": 446, "orders": 3, "revenue": 2135.0}, {"date": "2026-06-14", "channel": "facebook", "spend": 767.68, "impressions": 68756, "clicks": 568, "orders": 3, "revenue": 483.64}, {"date": "2026-06-15", "channel": "facebook", "spend": 927.18, "impressions": 72878, "clicks": 501, "orders": 16, "revenue": 9753.93}, {"date": "2026-06-16", "channel": "facebook", "spend": 982.84, "impressions": 74858, "clicks": 478, "orders": 15, "revenue": 4550.55}, {"date": "2026-06-17", "channel": "facebook", "spend": 930.48, "impressions": 72303, "clicks": 523, "orders": 10, "revenue": 5080.42}, {"date": "2026-06-18", "channel": "facebook", "spend": 888.52, "impressions": 74094, "clicks": 508, "orders": 10, "revenue": 4007.23}, {"date": "2026-06-19", "channel": "facebook", "spend": 808.05, "impressions": 62301, "clicks": 482, "orders": 8, "revenue": 3070.59}, {"date": "2026-06-20", "channel": "facebook", "spend": 496.65, "impressions": 41643, "clicks": 379, "orders": 4, "revenue": 2229.96}, {"date": "2026-06-21", "channel": "facebook", "spend": 619.31, "impressions": 49010, "clicks": 480, "orders": 2, "revenue": 805.1}, {"date": "2026-06-22", "channel": "facebook", "spend": 702.54, "impressions": 56901, "clicks": 449, "orders": 9, "revenue": 3871.0}, {"date": "2026-06-23", "channel": "facebook", "spend": 686.11, "impressions": 51027, "clicks": 406, "orders": 15, "revenue": 5385.96}, {"date": "2026-06-24", "channel": "facebook", "spend": 620.49, "impressions": 46597, "clicks": 364, "orders": 14, "revenue": 3238.96}, {"date": "2026-06-25", "channel": "facebook", "spend": 577.89, "impressions": 51506, "clicks": 392, "orders": 13, "revenue": 2143.97}, {"date": "2026-06-26", "channel": "facebook", "spend": 498.45, "impressions": 37830, "clicks": 343, "orders": 10, "revenue": 7531.58}, {"date": "2026-06-27", "channel": "facebook", "spend": 374.78, "impressions": 32760, "clicks": 333, "orders": 4, "revenue": 1203.04}, {"date": "2026-06-28", "channel": "facebook", "spend": 510.86, "impressions": 42119, "clicks": 465, "orders": 2, "revenue": 556.84}, {"date": "2026-06-29", "channel": "facebook", "spend": 623.16, "impressions": 52591, "clicks": 416, "orders": 12, "revenue": 3140.73}, {"date": "2026-06-30", "channel": "facebook", "spend": 661.97, "impressions": 50991, "clicks": 406, "orders": 15, "revenue": 5328.86}, {"date": "2026-07-01", "channel": "facebook", "spend": 593.83, "impressions": 55997, "clicks": 481, "orders": 14, "revenue": 6193.65}, {"date": "2026-07-02", "channel": "facebook", "spend": 526.71, "impressions": 52457, "clicks": 389, "orders": 8, "revenue": 1638.07}, {"date": "2026-07-03", "channel": "facebook", "spend": 476.35, "impressions": 52697, "clicks": 482, "orders": 9, "revenue": 981.28}, {"date": "2026-07-04", "channel": "facebook", "spend": 350.79, "impressions": 35440, "clicks": 397, "orders": 6, "revenue": 743.67}, {"date": "2026-07-05", "channel": "facebook", "spend": 524.7, "impressions": 54690, "clicks": 565, "orders": 3, "revenue": 1096.62}, {"date": "2026-07-06", "channel": "facebook", "spend": 531.28, "impressions": 55885, "clicks": 471, "orders": 12, "revenue": 3363.0}, {"date": "2026-07-07", "channel": "facebook", "spend": 592.92, "impressions": 60264, "clicks": 426, "orders": 14, "revenue": 5271.06}, {"date": "2026-07-08", "channel": "facebook", "spend": 500.28, "impressions": 54130, "clicks": 440, "orders": 6, "revenue": 1700.95}, {"date": "2026-07-09", "channel": "facebook", "spend": 465.61, "impressions": 48030, "clicks": 410, "orders": 11, "revenue": 3333.77}, {"date": "2026-07-10", "channel": "facebook", "spend": 432.35, "impressions": 46813, "clicks": 383, "orders": 8, "revenue": 4362.41}, {"date": "2026-07-11", "channel": "facebook", "spend": 352.27, "impressions": 40042, "clicks": 347, "orders": 1, "revenue": 7.5}, {"date": "2026-07-12", "channel": "facebook", "spend": 498.8, "impressions": 57121, "clicks": 525, "orders": 3, "revenue": 1042.49}], "channels": {"facebook": {"connected": true, "label": "Facebook / Instagram", "kind": "ads", "attribution": "Meta default (mixed per ad set)", "spend": 18145.3, "impressions": 1600837, "clicks": 13255, "orders": 260, "revenue": 94251.83, "revenueBasis": "derived from purchase ROAS", "roas": 5.19, "ctr": 0.83, "cpc": 1.37, "cvr": 1.96, "aov": 362.51, "spendShare": 100.0, "revenueShare": 100.0}, "google": {"connected": false, "label": "Google Ads", "kind": "ads", "attribution": "", "spend": 0, "impressions": 0, "clicks": 0, "orders": 0, "revenue": 0, "roas": null, "ctr": null, "cpc": null, "cvr": null, "aov": null, "spendShare": 0, "revenueShare": 0}, "amazon": {"connected": false, "label": "Amazon", "kind": "marketplace", "attribution": "", "spend": 0, "impressions": 0, "clicks": 0, "orders": 0, "revenue": 0, "adRevenue": 0, "totalRevenue": 0, "roas": null, "ctr": null, "cpc": null, "cvr": null, "aov": null, "spendShare": 0, "revenueShare": 0}, "walmart": {"connected": false, "label": "Walmart", "kind": "marketplace", "attribution": "", "spend": 0, "impressions": 0, "clicks": 0, "orders": 0, "revenue": 0, "adRevenue": 0, "totalRevenue": 0, "roas": null, "ctr": null, "cpc": null, "cvr": null, "aov": null, "spendShare": 0, "revenueShare": 0}}, "totals": {"spend": 18145.3, "revenue": 94251.83, "orders": 260, "clicks": 13255, "impressions": 1600837, "newCustomers": 0, "aov": 362.51, "blendedRoas": 5.19, "cac": null, "delta": {"spend": -11.5, "revenue": -41.2, "orders": -36.7, "blendedRoas": -33.6}}}</script>
+<!--CHART_DATA_END-->
+<script>
+(function(){
+  var el = document.getElementById("dash-data");
+  if(!el) return;
+  var data = JSON.parse(el.textContent);
+  var svg = document.getElementById("chart");
+  var W=900,H=260,pad=30;
+  // roll daily rows up to per-day totals across channels
+  var byDay={};
+  (data.daily||[]).forEach(function(r){
+    var day=byDay[r.date]||(byDay[r.date]={spend:0,revenue:0});
+    day.spend+=r.spend||0; day.revenue+=r.revenue||0;
+  });
+  var days=Object.keys(byDay).sort();
+  if(days.length<2){
+    svg.innerHTML='<text x="20" y="130" fill="#94a3b8" font-size="13">Daily trend appears once the pull writes a daily[] series (need 2+ days).</text>';
+    return;
+  }
+  var max=0; days.forEach(function(d){ max=Math.max(max,byDay[d].spend,byDay[d].revenue); });
+  function pts(key){
+    return days.map(function(d,i){
+      var x=pad+i*(W-2*pad)/(days.length-1);
+      var y=H-pad-(byDay[d][key]/max)*(H-2*pad);
+      return x.toFixed(1)+","+y.toFixed(1);
+    }).join(" ");
+  }
+  function line(key,color){
+    var p=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+    p.setAttribute("points",pts(key)); p.setAttribute("fill","none");
+    p.setAttribute("stroke",color); p.setAttribute("stroke-width","2.5");
+    p.setAttribute("vector-effect","non-scaling-stroke"); svg.appendChild(p);
+  }
+  line("spend","#94a3b8"); line("revenue","#3b82f6");
+})();
+</script>
+</body>
+</html>

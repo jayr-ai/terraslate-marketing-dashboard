@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{%meta.client%} - Marketing Dashboard</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
+    --blue:#3b82f6; --navy:#0f172a; --green:#16a34a; --red:#dc2626; --amber:#d97706;
+    --spend:#94a3b8; --rev:#3b82f6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; }
+  }
+  :root[data-theme="dark"]{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; }
+  :root[data-theme="light"]{ --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 64px;}
+  header.top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
+  h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-0.01em;}
+  .win{color:var(--muted);font-size:13px;}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin:28px 0 12px;font-weight:700;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .kpi-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .kpi-value{font-size:24px;font-weight:700;letter-spacing:-0.02em;}
+  .delta{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;}
+  .delta.up{color:var(--green)} .delta.down{color:var(--red)}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th:first-child,td:first-child{text-align:left;}
+  th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;}
+  tr.off td{color:var(--muted);}
+  .na{color:var(--amber);font-weight:600;}
+  .scroll{overflow-x:auto;}
+  .mix-row{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center;margin:10px 0;}
+  .mix-name{font-size:13px;font-weight:600;}
+  .mix-bar{position:relative;background:var(--line);border-radius:6px;height:20px;margin:4px 0;overflow:hidden;}
+  .mix-bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;}
+  .fill.spend{background:var(--spend)} .fill.rev{background:var(--rev)}
+  .mix-bar span{position:relative;font-size:11px;color:var(--ink);padding-left:8px;line-height:20px;mix-blend-mode:difference;color:#fff;}
+  .mk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+  .mk-card{border:1px solid var(--line);border-radius:10px;padding:14px;}
+  .mk-card h4{margin:0 0 10px;font-size:14px;}
+  .mk-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;}
+  ul.insights{list-style:none;padding:0;margin:0;}
+  .ins{padding:10px 12px;border-left:3px solid var(--muted);margin-bottom:8px;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:8px;}
+  .ins.high{border-left-color:var(--red)} .ins.warn{border-left-color:var(--amber)} .ins.info{border-left-color:var(--blue)}
+  .sev{font-size:10px;font-weight:700;letter-spacing:0.05em;padding:1px 6px;border-radius:4px;background:var(--line);margin-right:8px;}
+  #chart{width:100%;height:260px;}
+  footer{margin-top:32px;color:var(--muted);font-size:12px;}
+  .legend{font-size:12px;color:var(--muted);margin:6px 0 0;}
+  .legend b{color:var(--rev)} .legend i{color:var(--spend);font-style:normal;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>{%meta.client%} - Marketing Dashboard</h1>
+    <div class="win">{%meta.windowLabel%}: {%meta.dateStart%} to {%meta.dateEnd%} - built {%meta.builtAt%} ({%meta.reportingTz%})</div>
+  </header>
+
+  <h2>Overview</h2>
+  <div class="kpis">
+  <!--KPI_CARDS_START-->
+  <!--KPI_CARDS_END-->
+  </div>
+
+  <h2>Spend vs revenue over time</h2>
+  <div class="panel">
+    <svg id="chart" viewBox="0 0 900 260" preserveAspectRatio="none" aria-label="Spend vs revenue trend"></svg>
+    <p class="legend"><b>&#9632; revenue</b> &nbsp; <i>&#9632; spend</i></p>
+  </div>
+
+  <h2>Channel breakdown</h2>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Channel</th><th>Spend</th><th>Revenue</th><th>ROAS</th><th>Orders</th><th>AOV</th><th>CTR</th><th>CPC</th><th>CVR</th></tr></thead>
+      <tbody>
+      <!--CHANNELS_TABLE_START-->
+      <!--CHANNELS_TABLE_END-->
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Channel mix</h2>
+  <div class="panel">
+  <!--CHANNEL_MIX_START-->
+  <!--CHANNEL_MIX_END-->
+  </div>
+
+  <h2>Marketplace efficiency (ACoS / TACoS)</h2>
+  <div class="mk-grid">
+  <!--MARKETPLACE_START-->
+  <!--MARKETPLACE_END-->
+  </div>
+
+  <h2>Anomalies &amp; insights</h2>
+  <ul class="insights">
+  <!--INSIGHTS_START-->
+  <!--INSIGHTS_END-->
+  </ul>
+
+  <h2>Data provenance</h2>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Source</th><th>Status</th><th>Attribution</th><th>Date range</th></tr></thead>
+      <tbody>
+      <!--PROVENANCE_START-->
+      <!--PROVENANCE_END-->
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Numbers reconciled to the cent by build_dashboard.py before publish. Marketplace revenue (ACoS world) and
+    total revenue (TACoS world) are reported separately and never summed as company revenue.
+    Channels marked NO DATA are excluded from blended totals.
+  </footer>
+</div>
+
+<!--CHART_DATA_START-->
+<!--CHART_DATA_END-->
+<script>
+(function(){
+  var el = document.getElementById("dash-data");
+  if(!el) return;
+  var data = JSON.parse(el.textContent);
+  var svg = document.getElementById("chart");
+  var W=900,H=260,pad=30;
+  // roll daily rows up to per-day totals across channels
+  var byDay={};
+  (data.daily||[]).forEach(function(r){
+    var day=byDay[r.date]||(byDay[r.date]={spend:0,revenue:0});
+    day.spend+=r.spend||0; day.revenue+=r.revenue||0;
+  });
+  var days=Object.keys(byDay).sort();
+  if(days.length<2){
+    svg.innerHTML='<text x="20" y="130" fill="#94a3b8" font-size="13">Daily trend appears once the pull writes a daily[] series (need 2+ days).</text>';
+    return;
+  }
+  var max=0; days.forEach(function(d){ max=Math.max(max,byDay[d].spend,byDay[d].revenue); });
+  function pts(key){
+    return days.map(function(d,i){
+      var x=pad+i*(W-2*pad)/(days.length-1);
+      var y=H-pad-(byDay[d][key]/max)*(H-2*pad);
+      return x.toFixed(1)+","+y.toFixed(1);
+    }).join(" ");
+  }
+  function line(key,color){
+    var p=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+    p.setAttribute("points",pts(key)); p.setAttribute("fill","none");
+    p.setAttribute("stroke",color); p.setAttribute("stroke-width","2.5");
+    p.setAttribute("vector-effect","non-scaling-stroke"); svg.appendChild(p);
+  }
+  line("spend","#94a3b8"); line("revenue","#3b82f6");
+})();
+</script>
+</body>
+</html>
