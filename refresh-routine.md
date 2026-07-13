@@ -46,3 +46,9 @@ Meta ad account: `24540744` (TerraSlate Paper)
 - Revenue is derived from Meta's purchase ROAS (the MCP exposes no direct revenue field); the
   daily series reconciles to the account total exactly, which is the correctness guarantee.
 - `_meta_daily.json` / `_meta_prior.json` are scratch files (gitignored); safe to overwrite.
+- `data.json.daily[]` is long-term history, not just the current 30-day window: it powers the
+  page's date-range toggle (Today / Yesterday / Last 7 Days / This Month / Last Month / This
+  Quarter / This Year / Last Year) and the left-nav per-channel views. Each refresh only
+  overwrites the days it just pulled and keeps everything older, so history grows over time.
+  It was seeded once with `pull/backfill_merge.py` (see that file if history ever needs
+  re-seeding, e.g. after a long outage).

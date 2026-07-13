@@ -5,3 +5,4 @@ __pycache__/
 setup-github.sh
 pull/_meta_daily.json
 pull/_meta_prior.json
+pull/_backfill/

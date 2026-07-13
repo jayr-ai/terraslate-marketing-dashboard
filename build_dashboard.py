@@ -40,11 +40,15 @@ def main():
     d = json.loads(DATA.read_text())
     channels = d["channels"]
     daily = d.get("daily", [])
+    win_start, win_end = d["meta"]["dateStart"], d["meta"]["dateEnd"]
 
     # ---- 1. RECONCILE per-channel daily -> headline ---------------------------
-    if daily:
+    # daily[] can hold long-term history (for the client-side date-range toggle); only the
+    # rows inside the current headline window [dateStart, dateEnd] must reconcile to it.
+    window_rows = [r for r in daily if win_start <= r["date"] <= win_end]
+    if window_rows:
         agg = {}
-        for r in daily:
+        for r in window_rows:
             c = r["channel"]
             a = agg.setdefault(c, {"spend": 0.0, "impressions": 0, "clicks": 0, "orders": 0, "revenue": 0.0})
             a["spend"] += r.get("spend", 0)

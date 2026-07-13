@@ -121,7 +121,7 @@ def r_provenance():
     return "\n".join(rows)
 
 def r_chart_data():
-    payload = json.dumps({"daily": d.get("daily", []), "channels": ch, "totals": t})
+    payload = json.dumps({"daily": d.get("daily", []), "channels": ch, "totals": t, "meta": d["meta"]})
     return f'<script id="dash-data" type="application/json">{payload}</script>'
 
 REGIONS = {

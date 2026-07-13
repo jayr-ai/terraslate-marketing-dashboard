@@ -7,6 +7,11 @@ series, and prior 30-day total) and saves each raw tool result to a file. This s
 those files - handling Meta's display formatting like "$18,145.30 USD", "1,600,837", and
 "July 12, 2026" - reconciles, and writes data.json. Other channels are preserved untouched.
 
+daily[] is a long-term history (powers the dashboard's date-range toggle), not just the
+current window: newly parsed facebook rows overwrite same-date rows (fresher attribution)
+but every earlier day is kept, so history only grows across runs. See pull/backfill_merge.py
+for the one-time loader that seeded this history from pull/_backfill/chunk*.json.
+
 Usage:
   python3 pull/meta_from_mcp.py <daily_result.json> <prior_result.json>
 
@@ -91,7 +96,10 @@ def main():
         "windowLabel": "Last 30 days", "dateStart": start, "dateEnd": end,
         "priorLabel": "Prior 30 days", "generatedAt": datetime.date.today().isoformat(),
     })
-    d["daily"] = [r for r in d.get("daily", []) if r.get("channel") != "facebook"] + fb_daily
+    pulled_dates = {r["date"] for r in fb_daily}
+    kept = [r for r in d.get("daily", [])
+            if r.get("channel") != "facebook" or r["date"] not in pulled_dates]
+    d["daily"] = sorted(kept + fb_daily, key=lambda r: (r["date"], r["channel"]))
     d["channels"]["facebook"] = {
         "connected": True, "label": "Facebook / Instagram", "kind": "ads",
         "attribution": "Meta default (mixed per ad set)",

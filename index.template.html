@@ -8,21 +8,31 @@
   :root{
     --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
     --blue:#3b82f6; --navy:#0f172a; --green:#16a34a; --red:#dc2626; --amber:#d97706;
-    --spend:#94a3b8; --rev:#3b82f6;
+    --spend:#94a3b8; --rev:#3b82f6; --sidebar:#ffffff;
   }
   @media (prefers-color-scheme: dark){
-    :root{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; }
+    :root{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; --sidebar:#0d1626; }
   }
-  :root[data-theme="dark"]{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; }
-  :root[data-theme="light"]{ --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; }
+  :root[data-theme="dark"]{ --bg:#0b1220; --panel:#111a2b; --ink:#e8eef7; --muted:#93a3ba; --line:#22304a; --sidebar:#0d1626; }
+  :root[data-theme="light"]{ --bg:#f7f8fa; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --sidebar:#ffffff; }
   *{box-sizing:border-box}
   body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);}
+  .app{display:flex;min-height:100vh;align-items:flex-start;}
+  .sidebar{width:220px;flex:0 0 220px;background:var(--sidebar);border-right:1px solid var(--line);padding:20px 12px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .brand{font-size:14px;font-weight:700;padding:6px 10px 18px;letter-spacing:-0.01em;}
+  .nav-item{display:block;width:100%;text-align:left;background:none;border:none;color:var(--ink);font-size:13px;font-weight:600;padding:10px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px;font-family:inherit;}
+  .nav-item:hover{background:var(--line);}
+  .nav-item.active{background:var(--blue);color:#fff;}
+  .content{flex:1;min-width:0;}
   .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 64px;}
   header.top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
   h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-0.01em;}
   .win{color:var(--muted);font-size:13px;}
   h2{font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin:28px 0 12px;font-weight:700;}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .range-toggle{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 18px;}
+  .range-toggle button{background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:600;padding:7px 12px;border-radius:999px;cursor:pointer;font-family:inherit;}
+  .range-toggle button.active{background:var(--blue);border-color:var(--blue);color:#fff;}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
   .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
   .kpi-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
@@ -54,20 +64,48 @@
   footer{margin-top:32px;color:var(--muted);font-size:12px;}
   .legend{font-size:12px;color:var(--muted);margin:6px 0 0;}
   .legend b{color:var(--rev)} .legend i{color:var(--spend);font-style:normal;}
+  @media (max-width:760px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%;flex:none;position:static;height:auto;display:flex;overflow-x:auto;padding:12px;gap:4px;}
+    .nav-item{width:auto;white-space:nowrap;}
+    .brand{display:none;}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
+  <nav class="sidebar">
+    <div class="brand">{%meta.client%}</div>
+    <button class="nav-item active" data-scope="all">All Channels</button>
+    <button class="nav-item" data-scope="facebook">Facebook / Instagram</button>
+    <button class="nav-item" data-scope="google">Google Ads</button>
+    <button class="nav-item" data-scope="amazon">Amazon</button>
+    <button class="nav-item" data-scope="walmart">Walmart</button>
+  </nav>
+  <div class="content">
+  <div class="wrap">
   <header class="top">
-    <h1>{%meta.client%} - Marketing Dashboard</h1>
-    <div class="win">{%meta.windowLabel%}: {%meta.dateStart%} to {%meta.dateEnd%} - built {%meta.builtAt%} ({%meta.reportingTz%})</div>
+    <h1 id="section-title">{%meta.client%} - Marketing Dashboard</h1>
+    <div class="win">built {%meta.builtAt%} ({%meta.reportingTz%})</div>
   </header>
 
+  <div class="range-toggle" role="tablist" aria-label="Date range">
+    <button data-range="today">Today</button>
+    <button data-range="yesterday">Yesterday</button>
+    <button data-range="last7">Last 7 Days</button>
+    <button data-range="thismonth" class="active">This Month</button>
+    <button data-range="lastmonth">Last Month</button>
+    <button data-range="thisquarter">This Quarter</button>
+    <button data-range="thisyear">This Year</button>
+    <button data-range="lastyear">Last Year</button>
+  </div>
+
   <h2>Overview</h2>
-  <div class="kpis">
+  <div class="kpis" id="kpi-cards">
   <!--KPI_CARDS_START-->
   <!--KPI_CARDS_END-->
   </div>
+  <div id="scope-notice"></div>
 
   <h2>Spend vs revenue over time</h2>
   <div class="panel">
@@ -75,11 +113,12 @@
     <p class="legend"><b>&#9632; revenue</b> &nbsp; <i>&#9632; spend</i></p>
   </div>
 
+  <div id="all-view-panels">
   <h2>Channel breakdown</h2>
   <div class="panel scroll">
     <table>
       <thead><tr><th>Channel</th><th>Spend</th><th>Revenue</th><th>ROAS</th><th>Orders</th><th>AOV</th><th>CTR</th><th>CPC</th><th>CVR</th></tr></thead>
-      <tbody>
+      <tbody id="channels-tbody">
       <!--CHANNELS_TABLE_START-->
       <!--CHANNELS_TABLE_END-->
       </tbody>
@@ -103,6 +142,10 @@
   <!--INSIGHTS_START-->
   <!--INSIGHTS_END-->
   </ul>
+  <p class="legend">Channel mix, marketplace efficiency, and insights above reflect the dashboard's default reporting window ({%meta.dateStart%} to {%meta.dateEnd%}), not the date range toggle.</p>
+  </div>
+
+  <div id="channel-detail-panels" style="display:none"></div>
 
   <h2>Data provenance</h2>
   <div class="panel scroll">
@@ -120,6 +163,8 @@
     total revenue (TACoS world) are reported separately and never summed as company revenue.
     Channels marked NO DATA are excluded from blended totals.
   </footer>
+  </div>
+  </div>
 </div>
 
 <!--CHART_DATA_START-->
@@ -129,34 +174,203 @@
   var el = document.getElementById("dash-data");
   if(!el) return;
   var data = JSON.parse(el.textContent);
-  var svg = document.getElementById("chart");
-  var W=900,H=260,pad=30;
-  // roll daily rows up to per-day totals across channels
-  var byDay={};
-  (data.daily||[]).forEach(function(r){
-    var day=byDay[r.date]||(byDay[r.date]={spend:0,revenue:0});
-    day.spend+=r.spend||0; day.revenue+=r.revenue||0;
+  var channels = data.channels || {};
+  var daily = data.daily || [];
+  var meta = data.meta || {};
+  var scope = "all";
+  var range = "thismonth";
+
+  var SCOPE_LABELS = {all:"All Channels", facebook:"Facebook / Instagram", google:"Google Ads",
+    amazon:"Amazon", walmart:"Walmart"};
+  var RANGE_LABELS = {today:"Today", yesterday:"Yesterday", last7:"Last 7 Days", thismonth:"This Month",
+    lastmonth:"Last Month", thisquarter:"This Quarter", thisyear:"This Year", lastyear:"Last Year"};
+
+  function pad2(n){ return String(n).padStart(2,"0"); }
+  function toIso(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+  function addDays(d,n){ var r=new Date(d); r.setDate(r.getDate()+n); return r; }
+  function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+  function startOfQuarter(d){ var q=Math.floor(d.getMonth()/3); return new Date(d.getFullYear(), q*3, 1); }
+
+  function computeRange(key){
+    var today = new Date(); today.setHours(0,0,0,0);
+    var yesterday = addDays(today,-1);
+    if(key==="today") return {start:today, end:today};
+    if(key==="yesterday") return {start:yesterday, end:yesterday};
+    if(key==="last7") return {start:addDays(today,-6), end:today};
+    if(key==="thismonth") return {start:startOfMonth(today), end:today};
+    if(key==="lastmonth"){
+      var lmEnd = addDays(startOfMonth(today),-1);
+      return {start:startOfMonth(lmEnd), end:lmEnd};
+    }
+    if(key==="thisquarter") return {start:startOfQuarter(today), end:today};
+    if(key==="thisyear") return {start:new Date(today.getFullYear(),0,1), end:today};
+    if(key==="lastyear") return {start:new Date(today.getFullYear()-1,0,1), end:new Date(today.getFullYear()-1,11,31)};
+    return {start:today, end:today};
+  }
+
+  function priorRange(r){
+    var days = Math.round((r.end - r.start)/86400000)+1;
+    var priorEnd = addDays(r.start,-1);
+    var priorStart = addDays(priorEnd, -(days-1));
+    return {start:priorStart, end:priorEnd};
+  }
+
+  function rowsIn(r, channelFilter){
+    var s = toIso(r.start), e = toIso(r.end);
+    return daily.filter(function(row){
+      return row.date >= s && row.date <= e && (!channelFilter || row.channel === channelFilter);
+    });
+  }
+
+  function sum(rows){
+    var t = {spend:0, impressions:0, clicks:0, orders:0, revenue:0};
+    rows.forEach(function(row){
+      t.spend += row.spend||0; t.impressions += row.impressions||0;
+      t.clicks += row.clicks||0; t.orders += row.orders||0; t.revenue += row.revenue||0;
+    });
+    t.spend = Math.round(t.spend*100)/100; t.revenue = Math.round(t.revenue*100)/100;
+    t.roas = t.spend ? Math.round((t.revenue/t.spend)*100)/100 : null;
+    t.ctr = t.impressions ? Math.round((t.clicks/t.impressions)*10000)/100 : null;
+    t.cpc = t.clicks ? Math.round((t.spend/t.clicks)*100)/100 : null;
+    t.cvr = t.clicks ? Math.round((t.orders/t.clicks)*10000)/100 : null;
+    t.aov = t.orders ? Math.round((t.revenue/t.orders)*100)/100 : null;
+    return t;
+  }
+
+  function pctDelta(now, was){
+    if(!was) return null;
+    return Math.round(((now-was)/was)*1000)/10;
+  }
+
+  function money(n){ return "$" + Math.round(n||0).toLocaleString(); }
+  function money2(n){ return n==null ? "n/a" : "$" + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function num(n){ return Math.round(n||0).toLocaleString(); }
+  function naOr(v, suffix){ return v==null ? '<span class="na">NO DATA</span>' : (v+(suffix||"")); }
+  function deltaBadge(pct){
+    if(pct==null) return "";
+    var up = pct>=0;
+    return '<span class="delta '+(up?"up":"down")+'">'+(up?"▲":"▼")+" "+Math.abs(pct)+"%</span>";
+  }
+
+  function render(){
+    var r = computeRange(range);
+    var pr = priorRange(r);
+    var channelFilter = scope==="all" ? null : scope;
+    var connected = scope==="all" ? true : !!(channels[scope] && channels[scope].connected);
+
+    document.getElementById("section-title").textContent = SCOPE_LABELS[scope] + " / " + RANGE_LABELS[range];
+
+    document.querySelectorAll(".range-toggle button").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-range")===range);
+    });
+    document.querySelectorAll(".nav-item").forEach(function(b){
+      b.classList.toggle("active", b.getAttribute("data-scope")===scope);
+    });
+
+    var noticeEl = document.getElementById("scope-notice");
+    noticeEl.innerHTML = (scope!=="all" && !connected)
+      ? '<p class="na">NO DATA (not connected) for '+SCOPE_LABELS[scope]+'.</p>' : "";
+
+    var cur = sum(rowsIn(r, channelFilter));
+    var was = sum(rowsIn(pr, channelFilter));
+
+    var cards = [
+      ["Spend", money(cur.spend), deltaBadge(pctDelta(cur.spend, was.spend))],
+      ["Revenue", money(cur.revenue), deltaBadge(pctDelta(cur.revenue, was.revenue))],
+      [scope==="all" ? "Blended ROAS (MER)" : "ROAS", (cur.roas!=null? cur.roas+"x":"n/a"), deltaBadge(pctDelta(cur.roas||0, was.roas))],
+      ["Orders", num(cur.orders), deltaBadge(pctDelta(cur.orders, was.orders))],
+      ["AOV", cur.aov!=null? money2(cur.aov):"n/a", ""]
+    ];
+    if(scope!=="all"){
+      cards.push(["CTR", cur.ctr!=null? cur.ctr+"%":"n/a", ""]);
+      cards.push(["CPC", cur.cpc!=null? money2(cur.cpc):"n/a", ""]);
+      cards.push(["CVR", cur.cvr!=null? cur.cvr+"%":"n/a", ""]);
+    }
+    document.getElementById("kpi-cards").innerHTML = cards.map(function(c){
+      return '<div class="kpi"><div class="kpi-label">'+c[0]+'</div><div class="kpi-value">'+c[1]+'</div>'+c[2]+'</div>';
+    }).join("");
+
+    renderChart(r, channelFilter);
+
+    document.getElementById("all-view-panels").style.display = scope==="all" ? "" : "none";
+    document.getElementById("channel-detail-panels").style.display = scope==="all" ? "none" : "";
+    if(scope==="all"){
+      renderChannelTable(r);
+    } else {
+      renderChannelDetail(scope);
+    }
+  }
+
+  function renderChart(r, channelFilter){
+    var svg = document.getElementById("chart");
+    var rows = rowsIn(r, channelFilter);
+    var byDay = {};
+    rows.forEach(function(row){
+      var d = byDay[row.date] || (byDay[row.date]={spend:0,revenue:0});
+      d.spend += row.spend||0; d.revenue += row.revenue||0;
+    });
+    var days = Object.keys(byDay).sort();
+    if(days.length<2){
+      svg.innerHTML = '<text x="20" y="130" fill="#94a3b8" font-size="13">Not enough daily data in this range to draw a trend.</text>';
+      return;
+    }
+    var W=900,H=260,pad=30;
+    var max=0; days.forEach(function(d){ max=Math.max(max, byDay[d].spend, byDay[d].revenue); });
+    function pts(key){
+      return days.map(function(d,i){
+        var x=pad+i*(W-2*pad)/(days.length-1);
+        var y=H-pad-(max? (byDay[d][key]/max)*(H-2*pad) : 0);
+        return x.toFixed(1)+","+y.toFixed(1);
+      }).join(" ");
+    }
+    svg.innerHTML = "";
+    function line(key,color){
+      var p=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+      p.setAttribute("points",pts(key)); p.setAttribute("fill","none");
+      p.setAttribute("stroke",color); p.setAttribute("stroke-width","2.5");
+      p.setAttribute("vector-effect","non-scaling-stroke"); svg.appendChild(p);
+    }
+    line("spend","#94a3b8"); line("revenue","#3b82f6");
+  }
+
+  function renderChannelTable(r){
+    var tbody = document.getElementById("channels-tbody");
+    tbody.innerHTML = Object.keys(channels).map(function(c){
+      var h = channels[c];
+      if(!h.connected){
+        return '<tr class="off"><td>'+h.label+'</td><td colspan="8" class="na">NO DATA (not connected)</td></tr>';
+      }
+      var m = sum(rowsIn(r, c));
+      return "<tr><td>"+h.label+"</td><td>"+money(m.spend)+"</td><td>"+money(m.revenue)+"</td>"+
+        "<td>"+naOr(m.roas,"x")+"</td><td>"+num(m.orders)+"</td>"+
+        "<td>"+(m.aov!=null?money2(m.aov):"n/a")+"</td>"+
+        "<td>"+naOr(m.ctr,"%")+"</td><td>"+(m.cpc!=null?money2(m.cpc):"n/a")+"</td>"+
+        "<td>"+naOr(m.cvr,"%")+"</td></tr>";
+    }).join("");
+  }
+
+  function renderChannelDetail(scopeKey){
+    var h = channels[scopeKey];
+    var wrap = document.getElementById("channel-detail-panels");
+    if(!h || !h.connected || h.kind!=="marketplace"){ wrap.innerHTML = ""; return; }
+    wrap.innerHTML = '<h2>Marketplace efficiency (ACoS / TACoS)</h2><div class="mk-grid">'+
+      '<div class="mk-card"><h4>'+h.label+'</h4>'+
+      '<div class="mk-row"><span>Ad spend</span><b>'+money(h.spend)+'</b></div>'+
+      '<div class="mk-row"><span>Ad revenue</span><b>'+money(h.adRevenue||0)+'</b></div>'+
+      '<div class="mk-row"><span>Total revenue</span><b>'+money(h.totalRevenue||0)+'</b></div>'+
+      '<div class="mk-row"><span>ACoS</span><b>'+naOr(h.acos,"%")+'</b></div>'+
+      '<div class="mk-row"><span>TACoS</span><b>'+naOr(h.tacos,"%")+'</b></div>'+
+      '</div></div><p class="legend">Figures above are for the dashboard\'s default reporting window ('+meta.dateStart+' to '+meta.dateEnd+'), not the date toggle.</p>';
+  }
+
+  document.querySelectorAll(".range-toggle button").forEach(function(b){
+    b.addEventListener("click", function(){ range = b.getAttribute("data-range"); render(); });
   });
-  var days=Object.keys(byDay).sort();
-  if(days.length<2){
-    svg.innerHTML='<text x="20" y="130" fill="#94a3b8" font-size="13">Daily trend appears once the pull writes a daily[] series (need 2+ days).</text>';
-    return;
-  }
-  var max=0; days.forEach(function(d){ max=Math.max(max,byDay[d].spend,byDay[d].revenue); });
-  function pts(key){
-    return days.map(function(d,i){
-      var x=pad+i*(W-2*pad)/(days.length-1);
-      var y=H-pad-(byDay[d][key]/max)*(H-2*pad);
-      return x.toFixed(1)+","+y.toFixed(1);
-    }).join(" ");
-  }
-  function line(key,color){
-    var p=document.createElementNS("http://www.w3.org/2000/svg","polyline");
-    p.setAttribute("points",pts(key)); p.setAttribute("fill","none");
-    p.setAttribute("stroke",color); p.setAttribute("stroke-width","2.5");
-    p.setAttribute("vector-effect","non-scaling-stroke"); svg.appendChild(p);
-  }
-  line("spend","#94a3b8"); line("revenue","#3b82f6");
+  document.querySelectorAll(".nav-item").forEach(function(b){
+    b.addEventListener("click", function(){ scope = b.getAttribute("data-scope"); render(); });
+  });
+
+  render();
 })();
 </script>
 </body>
