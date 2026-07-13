@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .DS_Store
 setup-github.sh
+pull/_meta_daily.json
+pull/_meta_prior.json
