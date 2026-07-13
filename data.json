@@ -8,7 +8,7 @@
     "dateEnd": "2026-07-12",
     "priorLabel": "Prior 30 days",
     "generatedAt": "2026-07-13",
-    "builtAt": "2026-07-13T23:17:00+08:00"
+    "builtAt": "2026-07-13T23:29:39+08:00"
   },
   "channels": {
     "facebook": {
@@ -16,11 +16,11 @@
       "label": "Facebook / Instagram",
       "kind": "ads",
       "attribution": "Meta default (mixed per ad set)",
-      "spend": 18145.3,
-      "impressions": 1600837,
+      "spend": 18145.36,
+      "impressions": 1600847,
       "clicks": 13255,
       "orders": 260,
-      "revenue": 94251.83,
+      "revenue": 94251.96,
       "revenueBasis": "derived from purchase ROAS",
       "roas": 5.19,
       "ctr": 0.83,
@@ -354,11 +354,11 @@
     {
       "date": "2026-07-12",
       "channel": "facebook",
-      "spend": 498.8,
-      "impressions": 57121,
+      "spend": 498.86,
+      "impressions": 57131,
       "clicks": 525,
       "orders": 3,
-      "revenue": 1042.49
+      "revenue": 1042.62
     }
   ],
   "prior": {
@@ -393,11 +393,11 @@
     }
   ],
   "totals": {
-    "spend": 18145.3,
-    "revenue": 94251.83,
+    "spend": 18145.36,
+    "revenue": 94251.96,
     "orders": 260,
     "clicks": 13255,
-    "impressions": 1600837,
+    "impressions": 1600847,
     "newCustomers": 0,
     "aov": 362.51,
     "blendedRoas": 5.19,
