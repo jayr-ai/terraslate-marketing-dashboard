@@ -4,11 +4,11 @@
     "reportingTz": "America/Denver",
     "currency": "USD",
     "windowLabel": "Last 30 days",
-    "dateStart": "2026-06-13",
-    "dateEnd": "2026-07-12",
+    "dateStart": "2026-06-14",
+    "dateEnd": "2026-07-13",
     "priorLabel": "Prior 30 days",
-    "generatedAt": "2026-07-13",
-    "builtAt": "2026-07-14T09:31:13+08:00"
+    "generatedAt": "2026-07-14",
+    "builtAt": "2026-07-14T12:37:38+08:00"
   },
   "channels": {
     "facebook": {
@@ -16,17 +16,17 @@
       "label": "Facebook / Instagram",
       "kind": "ads",
       "attribution": "Meta default (mixed per ad set)",
-      "spend": 18145.41,
-      "impressions": 1600853,
-      "clicks": 13255,
-      "orders": 260,
-      "revenue": 94252.06,
+      "spend": 18094.29,
+      "impressions": 1606545,
+      "clicks": 13202,
+      "orders": 266,
+      "revenue": 96794.03,
       "revenueBasis": "derived from purchase ROAS",
-      "roas": 5.19,
-      "ctr": 0.83,
+      "roas": 5.35,
+      "ctr": 0.82,
       "cpc": 1.37,
-      "cvr": 1.96,
-      "aov": 362.51,
+      "cvr": 2.01,
+      "aov": 363.89,
       "spendShare": 100.0,
       "revenueShare": 100.0
     },
@@ -4980,8 +4980,8 @@
     {
       "date": "2026-07-11",
       "channel": "facebook",
-      "spend": 352.27,
-      "impressions": 40042,
+      "spend": 352.28,
+      "impressions": 40044,
       "clicks": 347,
       "orders": 1,
       "revenue": 7.5
@@ -4989,27 +4989,27 @@
     {
       "date": "2026-07-12",
       "channel": "facebook",
-      "spend": 498.91,
-      "impressions": 57137,
+      "spend": 499.26,
+      "impressions": 57176,
       "clicks": 525,
       "orders": 3,
-      "revenue": 1042.72
+      "revenue": 1043.45
     },
     {
       "date": "2026-07-13",
       "channel": "facebook",
-      "spend": 216.82,
-      "impressions": 20367,
-      "clicks": 132,
-      "orders": 1,
-      "revenue": 490.01
+      "spend": 570.97,
+      "impressions": 54757,
+      "clicks": 393,
+      "orders": 9,
+      "revenue": 4676.24
     }
   ],
   "prior": {
-    "spend": 20512.51,
-    "revenue": 160422.42,
-    "orders": 411,
-    "blendedRoas": 7.82
+    "spend": 20608.15,
+    "revenue": 154561.12,
+    "orders": 394,
+    "blendedRoas": 7.5
   },
   "remediation": {
     "walmartConnector": false
@@ -5017,11 +5017,11 @@
   "insights": [
     {
       "severity": "info",
-      "text": "Facebook / Instagram is the strongest channel at 5.19x ROAS on $18,145 spend."
+      "text": "Facebook / Instagram is the strongest channel at 5.35x ROAS on $18,094 spend."
     },
     {
       "severity": "high",
-      "text": "Total revenue is down 41.2% vs the prior period - investigate the driving channel."
+      "text": "Total revenue is down 37.4% vs the prior period - investigate the driving channel."
     },
     {
       "severity": "warn",
@@ -5037,20 +5037,20 @@
     }
   ],
   "totals": {
-    "spend": 18145.41,
-    "revenue": 94252.06,
-    "orders": 260,
-    "clicks": 13255,
-    "impressions": 1600853,
+    "spend": 18094.29,
+    "revenue": 96794.03,
+    "orders": 266,
+    "clicks": 13202,
+    "impressions": 1606545,
     "newCustomers": 0,
-    "aov": 362.51,
-    "blendedRoas": 5.19,
+    "aov": 363.89,
+    "blendedRoas": 5.35,
     "cac": null,
     "delta": {
-      "spend": -11.5,
-      "revenue": -41.2,
-      "orders": -36.7,
-      "blendedRoas": -33.6
+      "spend": -12.2,
+      "revenue": -37.4,
+      "orders": -32.5,
+      "blendedRoas": -28.7
     }
   },
   "provenance": [
@@ -5058,25 +5058,25 @@
       "source": "Facebook / Instagram",
       "connected": true,
       "attribution": "Meta default (mixed per ad set)",
-      "dateRange": "2026-06-13 to 2026-07-12"
+      "dateRange": "2026-06-14 to 2026-07-13"
     },
     {
       "source": "Google Ads",
       "connected": false,
       "attribution": "",
-      "dateRange": "2026-06-13 to 2026-07-12"
+      "dateRange": "2026-06-14 to 2026-07-13"
     },
     {
       "source": "Amazon",
       "connected": false,
       "attribution": "",
-      "dateRange": "2026-06-13 to 2026-07-12"
+      "dateRange": "2026-06-14 to 2026-07-13"
     },
     {
       "source": "Walmart",
       "connected": false,
       "attribution": "",
-      "dateRange": "2026-06-13 to 2026-07-12"
+      "dateRange": "2026-06-14 to 2026-07-13"
     }
   ]
 }
