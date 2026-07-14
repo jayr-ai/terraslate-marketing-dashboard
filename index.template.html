@@ -77,6 +77,10 @@
   .week-table th:first-child,.week-table td:first-child{text-align:left;position:sticky;left:0;background:var(--panel);font-weight:600;z-index:1;}
   .week-table thead th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.04em;font-weight:700;}
   .week-table td.total,.week-table th.total{font-weight:700;background:var(--bg);}
+  .week-chart{margin:14px 0 2px;}
+  .week-chart svg{width:100%;height:auto;display:block;overflow:visible;}
+  .week-chart .bar{transition:opacity .15s;}
+  .week-chart .bar:hover{opacity:0.75;}
   .analysis{margin-top:16px;}
   .analysis h4{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin:0 0 10px;}
   .analysis .ai-row{font-size:13px;line-height:1.55;margin:8px 0;padding-left:12px;border-left:3px solid var(--blue);}
@@ -160,8 +164,9 @@
     <div class="scroll">
       <table class="week-table"><thead id="week-thead"></thead><tbody id="week-tbody"></tbody></table>
     </div>
+    <div id="week-chart" class="week-chart"></div>
     <div class="analysis">
-      <h4>AI analysis</h4>
+      <h4>Analysis</h4>
       <div id="week-analysis"></div>
     </div>
   </div>
@@ -415,12 +420,51 @@
       return "<tr><td>"+WEEK_LABELS[c]+"</td><td class='total'>"+money(tot)+"</td>"+cells+"</tr>";
     }).join("");
 
+    var connectedChannels = order.filter(function(c){ return channels[c] && channels[c].connected; });
+    renderWeeklyChart(weeks, matrix, connectedChannels, metricLabel, year, maxD, lastPartial);
+
     anEl.innerHTML = order.map(function(c){
       if(!channels[c] || !channels[c].connected){
         return '<div class="ai-row muted"><b>'+WEEK_LABELS[c]+':</b> not connected, no data to analyze.</div>';
       }
       return '<div class="ai-row">'+analyzeChannel(WEEK_LABELS[c], weeks.map(function(w){return matrix[c][w];}), weeks, metricLabel, lastPartial)+'</div>';
     }).join("");
+  }
+
+  function renderWeeklyChart(weeks, matrix, connectedChannels, metricLabel, year, maxD, lastPartial){
+    var el = document.getElementById("week-chart");
+    // Chart runs oldest -> newest (left -> right), the standard reading order for a trend,
+    // even though the table above lists newest-first. Bars = total across connected channels.
+    var vals = weeks.map(function(w){ var t=0; connectedChannels.forEach(function(c){ t+=matrix[c][w]; }); return t; });
+    var max = Math.max.apply(null, vals.concat([0]));
+    if(!weeks.length || max<=0){ el.innerHTML=""; return; }
+    var W=900,H=230,padL=6,padR=6,padT=26,padB=22;
+    var plotW=W-padL-padR, plotH=H-padT-padB, n=weeks.length;
+    var gap = n>1 ? Math.min(5, plotW/n*0.28) : 0;
+    var barW = (plotW - gap*(n-1))/n;
+    var isRev = metricLabel==="Revenue";
+    var base = isRev ? "#3b82f6" : "#64748b";
+    var peak = isRev ? "#1d4ed8" : "#334155";
+    var peakI = vals.indexOf(max);
+    var bars = weeks.map(function(w,i){
+      var v=vals[i], bh = max ? (v/max)*plotH : 0;
+      var x = padL + i*(barW+gap), y = padT + plotH - bh;
+      var partial = (lastPartial && i===n-1);
+      var fill = (i===peakI) ? peak : base;
+      return '<rect class="bar" x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(1,barW).toFixed(1)+
+        '" height="'+Math.max(0,bh).toFixed(1)+'" rx="2" fill="'+fill+'" fill-opacity="'+(partial?0.4:1)+
+        '"><title>W'+w+' ('+weekStart(year,w)+' to '+weekEnd(year,w,maxD)+'): '+money(v)+(partial?' - partial week':'')+'</title></rect>';
+    }).join("");
+    var baseline = '<line x1="'+padL+'" y1="'+(padT+plotH)+'" x2="'+(W-padR)+'" y2="'+(padT+plotH)+'" style="stroke:var(--line)" stroke-width="1"/>';
+    var peakLbl = '<text x="'+padL+'" y="15" style="fill:var(--muted)" font-size="12" font-weight="600">Peak W'+weeks[peakI]+': '+money(max)+'</text>';
+    var step = Math.max(1, Math.round(n/8)), xl = '';
+    weeks.forEach(function(w,i){
+      if(i%step===0 || i===n-1){
+        var x = padL + i*(barW+gap) + barW/2;
+        xl += '<text x="'+x.toFixed(1)+'" y="'+(H-5)+'" style="fill:var(--muted)" font-size="10" text-anchor="middle">W'+w+'</text>';
+      }
+    });
+    el.innerHTML = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Weekly '+metricLabel+'">'+baseline+bars+peakLbl+xl+'</svg>';
   }
 
   function analyzeChannel(name, valsFull, weeksFull, metricLabel, lastPartial){
