@@ -432,6 +432,7 @@
     // the last week is "in progress" if its full 7-day span runs past the latest data day
     var lastPartial = weekEnd(year, maxWeek, null) > maxD;
     var weeks=[]; for(var w=1;w<=maxWeek;w++) weeks.push(w);
+    var displayWeeks = weeks.slice().reverse();   // columns run newest -> oldest (left -> right)
     var order=["facebook","google","amazon","walmart"];
     var matrix={}; order.forEach(function(c){ matrix[c]={}; weeks.forEach(function(w){matrix[c][w]=0;}); });
     rows.forEach(function(r){ if(matrix[r.channel]===undefined) return;
@@ -441,14 +442,14 @@
       "). This table follows only the This Year / Last Year toggle.";
 
     var thead = "<tr><th>Channel</th><th class='total'>Total</th>";
-    weeks.forEach(function(w){ thead += "<th title='"+weekStart(year,w)+" to "+weekEnd(year,w,maxD)+"'>W"+w+"</th>"; });
+    displayWeeks.forEach(function(w){ thead += "<th title='"+weekStart(year,w)+" to "+weekEnd(year,w,maxD)+"'>W"+w+"</th>"; });
     theadEl.innerHTML = thead + "</tr>";
 
     tbodyEl.innerHTML = order.map(function(c){
       if(!channels[c] || !channels[c].connected){
         return "<tr><td>"+WEEK_LABELS[c]+"</td><td class='na' colspan='"+(weeks.length+1)+"'>NO DATA (not connected)</td></tr>";
       }
-      var tot=0; var cells=weeks.map(function(w){ tot+=matrix[c][w]; return "<td>"+money(matrix[c][w])+"</td>"; }).join("");
+      var tot=0; var cells=displayWeeks.map(function(w){ tot+=matrix[c][w]; return "<td>"+money(matrix[c][w])+"</td>"; }).join("");
       return "<tr><td>"+WEEK_LABELS[c]+"</td><td class='total'>"+money(tot)+"</td>"+cells+"</tr>";
     }).join("");
 
