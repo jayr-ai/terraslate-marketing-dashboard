@@ -68,6 +68,20 @@
   footer{margin-top:32px;color:var(--muted);font-size:12px;}
   .legend{font-size:12px;color:var(--muted);margin:6px 0 0;}
   .legend b{color:var(--rev)} .legend i{color:var(--spend);font-style:normal;}
+  .metric-toggle{display:inline-flex;gap:6px;margin:0 0 12px;}
+  .metric-toggle button{background:var(--panel);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer;font-family:inherit;}
+  .metric-toggle button.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+  .week-note{font-size:12px;color:var(--muted);margin:0 0 10px;}
+  .week-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .week-table th,.week-table td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:right;white-space:nowrap;}
+  .week-table th:first-child,.week-table td:first-child{text-align:left;position:sticky;left:0;background:var(--panel);font-weight:600;z-index:1;}
+  .week-table thead th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:0.04em;font-weight:700;}
+  .week-table td.total,.week-table th.total{font-weight:700;background:var(--bg);}
+  .analysis{margin-top:16px;}
+  .analysis h4{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin:0 0 10px;}
+  .analysis .ai-row{font-size:13px;line-height:1.55;margin:8px 0;padding-left:12px;border-left:3px solid var(--blue);}
+  .analysis .ai-row.muted{color:var(--muted);border-left-color:var(--line);}
+  .analysis .ai-row b{font-weight:700;}
   @media (max-width:760px){
     .app{flex-direction:column;}
     .sidebar{width:100%;flex:none;position:static;height:auto;display:flex;overflow-x:auto;padding:12px;gap:4px;}
@@ -162,6 +176,22 @@
 <!--CHANNEL_MIX_END-->
   </div>
 
+  <h2>Weekly breakdown</h2>
+  <div class="panel">
+    <div class="metric-toggle" id="week-metric-toggle" role="tablist" aria-label="Weekly metric">
+      <button data-metric="spend" class="active">Ad Spend</button>
+      <button data-metric="revenue">Revenue</button>
+    </div>
+    <p class="week-note" id="week-note"></p>
+    <div class="scroll">
+      <table class="week-table"><thead id="week-thead"></thead><tbody id="week-tbody"></tbody></table>
+    </div>
+    <div class="analysis">
+      <h4>AI analysis</h4>
+      <div id="week-analysis"></div>
+    </div>
+  </div>
+
   <h2>Marketplace efficiency (ACoS / TACoS)</h2>
   <div class="mk-grid">
   <!--MARKETPLACE_START-->
@@ -222,6 +252,8 @@
   var meta = data.meta || {};
   var scope = "all";
   var range = "thismonth";
+  var weeklyMetric = "spend";   // weekly breakdown: "spend" | "revenue"
+  var weekYear = null;          // resolved from the This Year / Last Year toggle only
 
   var SCOPE_LABELS = {all:"All Channels", facebook:"Facebook / Instagram", google:"Google Ads",
     amazon:"Amazon", walmart:"Walmart"};
@@ -312,6 +344,10 @@
   function render(){
     var r = computeRange(range);
     var pr = priorRange(r);
+    // The weekly breakdown reacts ONLY to This Year / Last Year (not the other ranges).
+    if(range==="thisyear") weekYear = clientToday().getFullYear();
+    else if(range==="lastyear") weekYear = clientToday().getFullYear()-1;
+    else if(weekYear===null) weekYear = clientToday().getFullYear();
     var channelFilter = scope==="all" ? null : scope;
     var connected = scope==="all" ? true : !!(channels[scope] && channels[scope].connected);
 
@@ -362,9 +398,98 @@
     document.getElementById("channel-detail-panels").style.display = scope==="all" ? "none" : "";
     if(scope==="all"){
       renderChannelTable(r);
+      renderWeekly();
     } else {
       renderChannelDetail(scope);
     }
+  }
+
+  function weekOfYear(dateStr){
+    var p = dateStr.split("-"), y=+p[0], m=+p[1], d=+p[2];
+    var doy = Math.floor((new Date(y,m-1,d) - new Date(y,0,1))/86400000);
+    return Math.floor(doy/7)+1;   // Week 1 = Jan 1-7, Week 2 = Jan 8-14, ...
+  }
+  function weekStart(year,w){ return toIso(addDays(new Date(year,0,1),(w-1)*7)); }
+  function weekEnd(year,w,cap){ var e=toIso(addDays(new Date(year,0,1),(w-1)*7+6)); return (cap && e>cap)? cap : e; }
+  function mean(a){ return a.length ? a.reduce(function(x,y){return x+y;},0)/a.length : 0; }
+  var WEEK_LABELS = {facebook:"Meta", google:"Google Ads", amazon:"Amazon", walmart:"Walmart"};
+
+  function renderWeekly(){
+    var year = weekYear, yStr = String(year);
+    var rows = daily.filter(function(r){ return r.date.slice(0,4)===yStr; });
+    var noteEl=document.getElementById("week-note"), theadEl=document.getElementById("week-thead"),
+        tbodyEl=document.getElementById("week-tbody"), anEl=document.getElementById("week-analysis");
+    var curYear = clientToday().getFullYear();
+    var yearLabel = year===curYear ? "This Year" : (year===curYear-1 ? "Last Year" : String(year));
+    var metricLabel = weeklyMetric==="spend" ? "Ad Spend" : "Revenue";
+    if(!rows.length){
+      noteEl.innerHTML = "No "+metricLabel+" data for "+yearLabel+" ("+year+").";
+      theadEl.innerHTML=""; tbodyEl.innerHTML=""; anEl.innerHTML=""; return;
+    }
+    var maxWeek=0, minD=null, maxD=null;
+    rows.forEach(function(r){ var w=weekOfYear(r.date); if(w>maxWeek)maxWeek=w;
+      if(!minD||r.date<minD)minD=r.date; if(!maxD||r.date>maxD)maxD=r.date; });
+    // the last week is "in progress" if its full 7-day span runs past the latest data day
+    var lastPartial = weekEnd(year, maxWeek, null) > maxD;
+    var weeks=[]; for(var w=1;w<=maxWeek;w++) weeks.push(w);
+    var order=["facebook","google","amazon","walmart"];
+    var matrix={}; order.forEach(function(c){ matrix[c]={}; weeks.forEach(function(w){matrix[c][w]=0;}); });
+    rows.forEach(function(r){ if(matrix[r.channel]===undefined) return;
+      matrix[r.channel][weekOfYear(r.date)] += (r[weeklyMetric]||0); });
+
+    noteEl.innerHTML = "<b>"+metricLabel+"</b> by week - <b>"+yearLabel+"</b> ("+minD+" to "+maxD+
+      "). This table follows only the This Year / Last Year toggle.";
+
+    var thead = "<tr><th>Channel</th><th class='total'>Total</th>";
+    weeks.forEach(function(w){ thead += "<th title='"+weekStart(year,w)+" to "+weekEnd(year,w,maxD)+"'>W"+w+"</th>"; });
+    theadEl.innerHTML = thead + "</tr>";
+
+    tbodyEl.innerHTML = order.map(function(c){
+      if(!channels[c] || !channels[c].connected){
+        return "<tr><td>"+WEEK_LABELS[c]+"</td><td class='na' colspan='"+(weeks.length+1)+"'>NO DATA (not connected)</td></tr>";
+      }
+      var tot=0; var cells=weeks.map(function(w){ tot+=matrix[c][w]; return "<td>"+money(matrix[c][w])+"</td>"; }).join("");
+      return "<tr><td>"+WEEK_LABELS[c]+"</td><td class='total'>"+money(tot)+"</td>"+cells+"</tr>";
+    }).join("");
+
+    anEl.innerHTML = order.map(function(c){
+      if(!channels[c] || !channels[c].connected){
+        return '<div class="ai-row muted"><b>'+WEEK_LABELS[c]+':</b> not connected, no data to analyze.</div>';
+      }
+      return '<div class="ai-row">'+analyzeChannel(WEEK_LABELS[c], weeks.map(function(w){return matrix[c][w];}), weeks, metricLabel, lastPartial)+'</div>';
+    }).join("");
+  }
+
+  function analyzeChannel(name, valsFull, weeksFull, metricLabel, lastPartial){
+    var vals=valsFull, weeks=weeksFull, partialNote="";
+    if(lastPartial && valsFull.length>=4){
+      vals=valsFull.slice(0,-1); weeks=weeksFull.slice(0,-1);
+      partialNote=' (W'+weeksFull[weeksFull.length-1]+' is a partial week and left out of the trend.)';
+    }
+    var n=vals.length, total=vals.reduce(function(a,b){return a+b;},0), avg=total/n;
+    if(n<3 || total===0){
+      return '<b>'+name+':</b> '+metricLabel+' totaled '+money(total)+' over '+n+' week'+(n>1?'s':'')+
+        ' - not enough spread to call a trend yet.'+partialNote;
+    }
+    var third=Math.max(1,Math.floor(n/3));
+    var early=mean(vals.slice(0,third)), late=mean(vals.slice(n-third));
+    var trend = early ? Math.round((late-early)/early*100) : null;
+    var maxV=-Infinity,maxI=0,minV=Infinity,minI=0;
+    vals.forEach(function(v,i){ if(v>maxV){maxV=v;maxI=i;} if(v<minV){minV=v;minI=i;} });
+    var k=Math.min(4, Math.floor(n/2));
+    var recent=mean(vals.slice(n-k)), prior=mean(vals.slice(n-2*k, n-k));
+    var mom = prior ? Math.round((recent-prior)/prior*100) : null;
+    var dir = (trend===null) ? "held roughly flat"
+      : (trend>8 ? "trended up "+trend+"%" : (trend<-8 ? "trended down "+Math.abs(trend)+"%" : "held roughly flat"));
+    var s = '<b>'+name+':</b> '+metricLabel+' '+dir+' across the period (avg '+money(avg)+'/wk, '+
+      money(early)+'/wk early vs '+money(late)+'/wk recent). Peaked in W'+weeks[maxI]+' ('+money(maxV)+
+      '), lowest in W'+weeks[minI]+' ('+money(minV)+'). ';
+    if(mom!==null){
+      if(mom<=-10) s += '<b>Flag:</b> last '+k+' weeks are down '+Math.abs(mom)+'% vs the prior '+k+' - momentum is cooling.';
+      else if(mom>=10) s += 'Last '+k+' weeks are up '+mom+'% vs the prior '+k+' - momentum is building.';
+      else s += 'Recent weeks are holding steady vs the prior '+k+'.';
+    }
+    return s + partialNote;
   }
 
   function renderChart(r, channelFilter){
@@ -434,6 +559,13 @@
   });
   document.querySelectorAll(".nav-item").forEach(function(b){
     b.addEventListener("click", function(){ scope = b.getAttribute("data-scope"); render(); });
+  });
+  document.querySelectorAll("#week-metric-toggle button").forEach(function(b){
+    b.addEventListener("click", function(){
+      weeklyMetric = b.getAttribute("data-metric");
+      document.querySelectorAll("#week-metric-toggle button").forEach(function(x){ x.classList.toggle("active", x===b); });
+      renderWeekly();
+    });
   });
 
   render();
