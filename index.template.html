@@ -39,6 +39,10 @@
   .kpi-value{font-size:24px;font-weight:700;letter-spacing:-0.02em;}
   .delta{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;}
   .delta.up{color:var(--green)} .delta.down{color:var(--red)}
+  .source-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px;}
+  .source-row .lbl{font-size:11px;font-weight:700;letter-spacing:0.06em;color:var(--muted);text-transform:uppercase;}
+  .source-pill{display:inline-block;padding:4px 14px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:0.04em;background:#c6ff2e;color:#0b1220;box-shadow:0 0 8px rgba(198,255,46,0.55);}
+  .source-none{font-size:12px;color:var(--amber);font-weight:600;}
   table{width:100%;border-collapse:collapse;font-size:13px;}
   th,td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
   th:first-child,td:first-child{text-align:left;}
@@ -101,6 +105,7 @@
   </div>
 
   <h2>Overview</h2>
+  <div class="source-row" id="source-badges"></div>
   <div class="kpis" id="kpi-cards">
   <!--KPI_CARDS_START-->
   <!--KPI_CARDS_END-->
@@ -184,6 +189,7 @@
     amazon:"Amazon", walmart:"Walmart"};
   var RANGE_LABELS = {today:"Today", yesterday:"Yesterday", last7:"Last 7 Days", thismonth:"This Month",
     lastmonth:"Last Month", thisquarter:"This Quarter", thisyear:"This Year", lastyear:"Last Year"};
+  var SOURCE_NAMES = {facebook:"META", google:"GOOGLE ADS", amazon:"AMAZON", walmart:"WALMART"};
 
   function pad2(n){ return String(n).padStart(2,"0"); }
   function toIso(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
@@ -191,8 +197,21 @@
   function startOfMonth(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
   function startOfQuarter(d){ var q=Math.floor(d.getMonth()/3); return new Date(d.getFullYear(), q*3, 1); }
 
+  function clientToday(){
+    // "Today" in the CLIENT's timezone (meta.reportingTz), not the viewer's browser timezone.
+    // Every range below is derived from this, so all toggles follow the client's calendar day.
+    var tz = meta.reportingTz;
+    try {
+      var s = new Intl.DateTimeFormat("en-CA", {timeZone: tz, year:"numeric", month:"2-digit", day:"2-digit"}).format(new Date());
+      var p = s.split("-");
+      return new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
+    } catch(e){
+      var d = new Date(); d.setHours(0,0,0,0); return d;
+    }
+  }
+
   function computeRange(key){
-    var today = new Date(); today.setHours(0,0,0,0);
+    var today = clientToday();
     var yesterday = addDays(today,-1);
     if(key==="today") return {start:today, end:today};
     if(key==="yesterday") return {start:yesterday, end:yesterday};
@@ -270,6 +289,15 @@
     var noticeEl = document.getElementById("scope-notice");
     noticeEl.innerHTML = (scope!=="all" && !connected)
       ? '<p class="na">NO DATA (not connected) for '+SCOPE_LABELS[scope]+'.</p>' : "";
+
+    // SOURCE pills: which ad channels the numbers on screen actually come from.
+    var srcEl = document.getElementById("source-badges");
+    var srcKeys = (scope==="all")
+      ? Object.keys(channels).filter(function(c){ return channels[c].connected; })
+      : (connected ? [scope] : []);
+    srcEl.innerHTML = '<span class="lbl">Source</span>' + (srcKeys.length
+      ? srcKeys.map(function(c){ return '<span class="source-pill">'+(SOURCE_NAMES[c]||channels[c].label.toUpperCase())+'</span>'; }).join("")
+      : '<span class="source-none">no connected sources</span>');
 
     var cur = sum(rowsIn(r, channelFilter));
     var was = sum(rowsIn(pr, channelFilter));
