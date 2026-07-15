@@ -22,10 +22,11 @@ Meta ad account: `24540744` (TerraSlate Paper)
 3. Call `ads_get_ad_entities` for the PRIOR window (single total, no time_increment) and save
    the raw output to `pull/_meta_prior.json`.
 
-3b. Pull Google Ads via the API: `python3 pull/google_ads.py`. Reads credentials from
-   `pull/.google_creds.json` (or env vars) and updates the `google` channel. A "missing
-   credential" or "no rows" message is EXPECTED until Google is connected - continue anyway
-   (Google stays NO DATA). Only stop on an unexpected traceback.
+3b. Pull Google Ads + Amazon + Walmart from Windsor.ai: `python3 pull/windsor.py`. Reads the
+   API key from `pull/.windsor_creds.json` (or env) and updates the google/amazon/walmart
+   channels (Meta untouched). A "missing WINDSOR_API_KEY" or "no rows" message is EXPECTED
+   until Windsor is connected - continue anyway (those channels stay NO DATA). Only stop on an
+   unexpected traceback. (`pull/google_ads.py` remains as an alternative native-API path.)
 
 4. Transform, reconcile, and render (all gates run here):
    ```bash

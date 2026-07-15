@@ -1,0 +1,4 @@
+{
+  "WINDSOR_API_KEY": "your-windsor-api-key",
+  "WINDSOR_BASE_URL": "https://connectors.windsor.ai/all"
+}
