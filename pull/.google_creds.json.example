@@ -1,0 +1,9 @@
+{
+  "GOOGLE_ADS_DEVELOPER_TOKEN": "your-developer-token",
+  "GOOGLE_ADS_CLIENT_ID": "xxxxx.apps.googleusercontent.com",
+  "GOOGLE_ADS_CLIENT_SECRET": "your-client-secret",
+  "GOOGLE_ADS_REFRESH_TOKEN": "1//your-refresh-token",
+  "GOOGLE_ADS_LOGIN_CUSTOMER_ID": "1234567890",
+  "GOOGLE_ADS_CUSTOMER_ID": "9876543210",
+  "GOOGLE_ADS_API_VERSION": "v18"
+}

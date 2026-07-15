@@ -6,3 +6,4 @@ setup-github.sh
 pull/_meta_daily.json
 pull/_meta_prior.json
 pull/_backfill/
+pull/.google_creds.json

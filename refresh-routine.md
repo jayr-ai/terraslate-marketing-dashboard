@@ -22,6 +22,11 @@ Meta ad account: `24540744` (TerraSlate Paper)
 3. Call `ads_get_ad_entities` for the PRIOR window (single total, no time_increment) and save
    the raw output to `pull/_meta_prior.json`.
 
+3b. Pull Google Ads via the API: `python3 pull/google_ads.py`. Reads credentials from
+   `pull/.google_creds.json` (or env vars) and updates the `google` channel. A "missing
+   credential" or "no rows" message is EXPECTED until Google is connected - continue anyway
+   (Google stays NO DATA). Only stop on an unexpected traceback.
+
 4. Transform, reconcile, and render (all gates run here):
    ```bash
    cd /Users/jayvee/Documents/ds-work/terraslate-marketing-dashboard
