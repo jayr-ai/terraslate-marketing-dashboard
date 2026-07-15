@@ -42,8 +42,10 @@ F = {
     "impressions": ["impressions", "impr"],
     "clicks": ["clicks"],
     "conversions": ["conversions", "conv", "orders", "purchases", "total_conversions"],
-    "revenue": ["revenue", "conversions_value", "conversion_value", "total_conversion_value",
-                "conv_value", "sales", "total_revenue"],
+    # Google exposes value as conversions_value (revenue field is empty); marketplaces may use
+    # revenue/sales. Prefer the known-good value fields first, fall back to generic revenue.
+    "revenue": ["conversions_value", "conversion_value", "all_conversions_value", "revenue",
+                "sales", "total_revenue", "total_conversion_value", "conv_value"],
 }
 
 
@@ -89,11 +91,13 @@ def channel_of(row):
     return None
 
 
-def fetch(base, api_key, since, until):
+def fetch(base, api_key):
+    # NOTE: Windsor ignores URL date params (date_from/date_preset/etc) for the /all endpoint -
+    # the date range is whatever the saved query in the Windsor UI is set to. So we fetch what
+    # the saved query returns and (optionally) filter locally by --since/--until below.
     params = {
         "api_key": api_key,
-        "date_from": since, "date_to": until,
-        "fields": "source,date,spend,impressions,clicks,conversions,revenue",
+        "fields": "source,date,spend,impressions,clicks,conversions,conversions_value,revenue",
         "_renderer": "json",
     }
     url = base + "?" + urllib.parse.urlencode(params)
@@ -110,19 +114,19 @@ def fetch(base, api_key, since, until):
 
 def main():
     args = sys.argv[1:]
-    today = datetime.date.today()
-    until = today - datetime.timedelta(days=1)
-    since = until - datetime.timedelta(days=29)
-    if "--since" in args:
-        since = datetime.date.fromisoformat(args[args.index("--since") + 1])
-    if "--until" in args:
-        until = datetime.date.fromisoformat(args[args.index("--until") + 1])
+    # Optional LOCAL date filter (Windsor's own date range is set in its UI saved query).
+    since = args[args.index("--since") + 1] if "--since" in args else None
+    until = args[args.index("--until") + 1] if "--until" in args else None
 
     rows = fetch(cfg("WINDSOR_BASE_URL", required=False, default="https://connectors.windsor.ai/all"),
-                 cfg("WINDSOR_API_KEY"), since.isoformat(), until.isoformat())
+                 cfg("WINDSOR_API_KEY"))
     if not rows:
-        print(f"WARNING: Windsor returned no rows for {since} to {until}; data.json unchanged", file=sys.stderr)
+        print("WARNING: Windsor returned no rows (check the saved query in the Windsor UI); "
+              "data.json unchanged", file=sys.stderr)
         return
+    if since or until:
+        rows = [r for r in rows if (not since or str(pick(r, F["date"]))[:10] >= since)
+                and (not until or str(pick(r, F["date"]))[:10] <= until)]
 
     # accumulate per (channel, date)
     acc = {}
@@ -170,7 +174,8 @@ def main():
 
     d["daily"] = sorted(d["daily"], key=lambda r: (r["date"], r["channel"]))
     DATA.write_text(json.dumps(d, indent=2))
-    print(f"OK Windsor pull {since} to {until}: channels {', '.join(channels_seen)}")
+    all_dates = sorted({dt for (_, dt) in acc})
+    print(f"OK Windsor pull [{all_dates[0]}..{all_dates[-1]}]: channels {', '.join(channels_seen)}")
 
 
 if __name__ == "__main__":

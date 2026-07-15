@@ -8,7 +8,7 @@
     "dateEnd": "2026-07-13",
     "priorLabel": "Prior 30 days",
     "generatedAt": "2026-07-14",
-    "builtAt": "2026-07-14T16:42:26+00:00"
+    "builtAt": "2026-07-15T23:37:11+08:00"
   },
   "channels": {
     "facebook": {
@@ -27,26 +27,26 @@
       "cpc": 1.37,
       "cvr": 2.01,
       "aov": 363.89,
-      "spendShare": 100.0,
-      "revenueShare": 100.0
+      "spendShare": 85.54,
+      "revenueShare": 82.44
     },
     "google": {
-      "connected": false,
+      "connected": true,
       "label": "Google Ads",
       "kind": "ads",
-      "attribution": "",
-      "spend": 0,
-      "impressions": 0,
-      "clicks": 0,
-      "orders": 0,
-      "revenue": 0,
-      "roas": null,
-      "ctr": null,
-      "cpc": null,
-      "cvr": null,
-      "aov": null,
-      "spendShare": 0,
-      "revenueShare": 0
+      "attribution": "Google conversion tracking (via Windsor.ai)",
+      "spend": 3058.31,
+      "impressions": 47989,
+      "clicks": 652,
+      "orders": 51,
+      "revenue": 20615.78,
+      "roas": 6.74,
+      "ctr": 1.36,
+      "cpc": 4.69,
+      "cvr": 7.82,
+      "aov": 404.23,
+      "spendShare": 14.46,
+      "revenueShare": 17.56
     },
     "amazon": {
       "connected": false,
@@ -4960,6 +4960,15 @@
       "revenue": 1700.95
     },
     {
+      "date": "2026-07-08",
+      "channel": "google",
+      "spend": 702.91,
+      "impressions": 12558,
+      "clicks": 164,
+      "orders": 11,
+      "revenue": 2572.16
+    },
+    {
       "date": "2026-07-09",
       "channel": "facebook",
       "spend": 465.61,
@@ -4967,6 +4976,15 @@
       "clicks": 410,
       "orders": 11,
       "revenue": 3333.77
+    },
+    {
+      "date": "2026-07-09",
+      "channel": "google",
+      "spend": 857.33,
+      "impressions": 12416,
+      "clicks": 143,
+      "orders": 15,
+      "revenue": 8338.99
     },
     {
       "date": "2026-07-10",
@@ -4978,6 +4996,15 @@
       "revenue": 4362.41
     },
     {
+      "date": "2026-07-10",
+      "channel": "google",
+      "spend": 646.62,
+      "impressions": 11715,
+      "clicks": 136,
+      "orders": 9,
+      "revenue": 5568.33
+    },
+    {
       "date": "2026-07-11",
       "channel": "facebook",
       "spend": 352.28,
@@ -4985,6 +5012,15 @@
       "clicks": 347,
       "orders": 1,
       "revenue": 7.5
+    },
+    {
+      "date": "2026-07-11",
+      "channel": "google",
+      "spend": 68.57,
+      "impressions": 92,
+      "clicks": 23,
+      "orders": 4,
+      "revenue": 935.95
     },
     {
       "date": "2026-07-12",
@@ -4996,6 +5032,15 @@
       "revenue": 1043.45
     },
     {
+      "date": "2026-07-12",
+      "channel": "google",
+      "spend": 116.44,
+      "impressions": 73,
+      "clicks": 22,
+      "orders": 2,
+      "revenue": 359.2
+    },
+    {
       "date": "2026-07-13",
       "channel": "facebook",
       "spend": 570.97,
@@ -5003,6 +5048,24 @@
       "clicks": 393,
       "orders": 9,
       "revenue": 4676.24
+    },
+    {
+      "date": "2026-07-13",
+      "channel": "google",
+      "spend": 666.44,
+      "impressions": 11135,
+      "clicks": 164,
+      "orders": 10,
+      "revenue": 2841.15
+    },
+    {
+      "date": "2026-07-14",
+      "channel": "google",
+      "spend": 937.85,
+      "impressions": 9078,
+      "clicks": 142,
+      "orders": 14,
+      "revenue": 3869.5
     }
   ],
   "prior": {
@@ -5017,15 +5080,7 @@
   "insights": [
     {
       "severity": "info",
-      "text": "Facebook / Instagram is the strongest channel at 5.35x ROAS on $18,094 spend."
-    },
-    {
-      "severity": "high",
-      "text": "Total revenue is down 37.4% vs the prior period - investigate the driving channel."
-    },
-    {
-      "severity": "warn",
-      "text": "Google Ads is not connected - its tiles read NO DATA and it is excluded from blended totals."
+      "text": "Google Ads is the strongest channel at 6.74x ROAS on $3,058 spend."
     },
     {
       "severity": "warn",
@@ -5037,20 +5092,20 @@
     }
   ],
   "totals": {
-    "spend": 18094.29,
-    "revenue": 96794.03,
-    "orders": 266,
-    "clicks": 13202,
-    "impressions": 1606545,
+    "spend": 21152.6,
+    "revenue": 117409.81,
+    "orders": 317,
+    "clicks": 13854,
+    "impressions": 1654534,
     "newCustomers": 0,
-    "aov": 363.89,
-    "blendedRoas": 5.35,
+    "aov": 370.38,
+    "blendedRoas": 5.55,
     "cac": null,
     "delta": {
-      "spend": -12.2,
-      "revenue": -37.4,
-      "orders": -32.5,
-      "blendedRoas": -28.7
+      "spend": 2.6,
+      "revenue": -24.0,
+      "orders": -19.5,
+      "blendedRoas": -26.0
     }
   },
   "provenance": [
@@ -5062,8 +5117,8 @@
     },
     {
       "source": "Google Ads",
-      "connected": false,
-      "attribution": "",
+      "connected": true,
+      "attribution": "Google conversion tracking (via Windsor.ai)",
       "dateRange": "2026-06-14 to 2026-07-13"
     },
     {
