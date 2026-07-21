@@ -8,3 +8,4 @@ pull/_meta_prior.json
 pull/_backfill/
 pull/.google_creds.json
 pull/.windsor_creds.json
+pull/.amazon_creds.json

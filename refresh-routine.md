@@ -22,11 +22,14 @@ Meta ad account: `24540744` (TerraSlate Paper)
 3. Call `ads_get_ad_entities` for the PRIOR window (single total, no time_increment) and save
    the raw output to `pull/_meta_prior.json`.
 
-3b. Pull Google Ads + Amazon + Walmart from Windsor.ai: `python3 pull/windsor.py`. Reads the
-   API key from `pull/.windsor_creds.json` (or env) and updates the google/amazon/walmart
-   channels (Meta untouched). A "missing WINDSOR_API_KEY" or "no rows" message is EXPECTED
-   until Windsor is connected - continue anyway (those channels stay NO DATA). Only stop on an
-   unexpected traceback. (`pull/google_ads.py` remains as an alternative native-API path.)
+3b. Pull Google Ads (+ Walmart if connected) from Windsor.ai: `python3 pull/windsor.py`. Reads
+   `pull/.windsor_creds.json` (or env), updates google/walmart (Meta + Amazon untouched).
+   "missing WINDSOR_API_KEY"/"no rows" is EXPECTED until connected - continue anyway.
+
+3c. Pull Amazon Ads from the Amazon Ads API: `python3 pull/amazon_ads.py`. Reads
+   `pull/.amazon_creds.json` (or env), updates the amazon channel. "missing AMAZON_ADS_..." or
+   "no Amazon rows" is EXPECTED until connected - continue anyway (Amazon stays NO DATA). The
+   async report flow can take a couple of minutes. Only stop on an unexpected traceback.
 
 4. Transform, reconcile, and render (all gates run here):
    ```bash

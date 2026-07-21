@@ -1,0 +1,7 @@
+{
+  "AMAZON_ADS_CLIENT_ID": "amzn1.application-oa2-client.xxxxxxxx",
+  "AMAZON_ADS_CLIENT_SECRET": "amzn1.oa2-cs.v1.xxxxxxxx",
+  "AMAZON_ADS_REFRESH_TOKEN": "Atzr|xxxxxxxx",
+  "AMAZON_ADS_PROFILE_ID": "1234567890",
+  "AMAZON_ADS_REGION": "NA"
+}

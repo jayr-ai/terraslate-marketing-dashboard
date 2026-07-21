@@ -1,16 +1,14 @@
 # Deploys the TerraSlate marketing dashboard to GitHub Pages.
-# - daily cron:            pull fresh Meta data -> commit -> build -> render -> deploy
-# - manual "Run workflow": same as the cron (on-demand refresh)
-# - on push to main:       build + render + deploy the committed data.json (no re-pull)
+# - on push to main:       build + render + deploy the committed data.json
+# - manual "Run workflow": on-demand rebuild + deploy
 #
-# The daily DATA pull needs a Meta Graph API token in the repo secret META_ACCESS_TOKEN
-# (Settings > Secrets and variables > Actions). Without it, the pull step is skipped and the
-# cron just redeploys the committed data.json.
+# The DAILY DATA REFRESH is done by the LOCAL scheduled task (Meta MCP + Windsor + Amazon API),
+# which commits and pushes. This workflow deliberately has NO cron schedule: a cloud cron here
+# only bumps builtAt with no new data (no MCP in Actions) and its commits fight the local
+# task's pushes. So the cloud side is deploy-only; every push redeploys Pages.
 name: dashboard-deploy
 
 on:
-  schedule:
-    - cron: "0 12 * * *"   # 12:00 UTC = 06:00 America/Denver (MDT). Adjust for your timezone.
   workflow_dispatch: {}
   push:
     branches: [main]
